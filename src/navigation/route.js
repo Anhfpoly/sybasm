@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
+import {Text, View, Image} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Welcome from '../screens/Welcome';
 import AddRecord from '../screens/AddRecord';
@@ -44,53 +47,62 @@ const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
       screen: AddRecordStack,
       navigationOptions: {
         tabBarLabel: 'Biên Bản',
-        tabBarColor: '#4285f4',
-        tabBarIcon: <Entypo name={'book'} size={20} color="#fff"></Entypo>,
+        tabBarColor: '#fff',
+        tabBarIcon: <Entypo name={'plus'} size={20} color="#4285f4"></Entypo>,
       },
     },
     HistoryStack: {
       screen: HistoryStack,
       navigationOptions: {
         tabBarLabel: 'Lịch Sử',
-        tabBarColor: '#4285f4',
-        tabBarIcon: <Entypo name={'book'} size={20} color="#fff"></Entypo>,
+        tabBarColor: '#fff',
+        tabBarIcon: (
+          <Entypo name={'back-in-time'} size={20} color="#4285f4"></Entypo>
+        ),
       },
     },
     NotificationsStack: {
       screen: NotificationsStack,
       navigationOptions: {
         tabBarLabel: 'Thông báo',
-        tabBarColor: '#4285f4',
-        tabBarIcon: <Entypo name={'book'} size={20} color="#fff"></Entypo>,
+        tabBarColor: '#fff',
+        tabBarIcon: (
+          <Entypo name={'notification'} size={20} color="#4285f4"></Entypo>
+        ),
       },
     },
     PoliceStack: {
       screen: PoliceStack,
       navigationOptions: {
         tabBarLabel: 'Giao thông',
-        tabBarColor: '#4285f4',
-        tabBarIcon: <Entypo name={'book'} size={20} color="#fff"></Entypo>,
+        tabBarColor: '#fff',
+        tabBarIcon: (
+          <FontAwesome5
+            name={'dove'}
+            size={20}
+            color="#4285f4"></FontAwesome5>
+        ),
       },
     },
     ProfileStack: {
       screen: ProfileStack,
       navigationOptions: {
         tabBarLabel: 'Chủ xe',
-        tabBarColor: '#4285f4',
-        tabBarIcon: <Entypo name={'book'} size={20} color="#fff"></Entypo>,
+        tabBarColor: '#fff',
+        tabBarIcon: <MaterialCommunityIcons name={'motorbike'} size={26} color="#4285f4"></MaterialCommunityIcons>,
       },
     },
     TreasuryStack: {
       screen: TreasuryStack,
       navigationOptions: {
         tabBarLabel: 'Kho bạc',
-        tabBarColor: '#4285f4',
-        tabBarIcon: <Entypo name={'book'} size={20} color="#fff"></Entypo>,
+        tabBarColor: '#fff',
+        tabBarIcon: <FontAwesome name={'bank'} size={18} color="#4285f4"></FontAwesome>,
       },
     },
   },
   {
-    activeColor: '#f0edf6',
+    activeColor: '#4285f4',
     inactiveColor: '#3e2465',
     barStyle: {backgroundColor: '#694fad'},
   },

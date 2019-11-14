@@ -8,19 +8,57 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  SafeAreaView,
 } from 'react-native';
 
 export default class Login extends Component {
+  state={
+  }
   _login() {
-    this.props.navigation.navigate('VehicleOwner');
+    if(this.state.userName="cx"){
+      this.props.navigation.navigate('VehicleOwner');
+    }
+    if(this.state.userName="cs"){
+      this.props.navigation.navigate('VehicleOwner');
+    }
+    if(this.state.userName="kb"){
+      this.props.navigation.navigate('VehicleOwner');
+    }
+    if(this.state.userName="dn"){
+      this.props.navigation.navigate('VehicleOwner');
+    }
+
   }
   componentDidMount() {}
 
   render() {
     return (
-      <SafeAreaView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
+          {/* <Image
+            source={require('../../images/logo.png')}
+            style={styles.logo}></Image> */}
+          <Text style={styles.title}>Đăng Nhập</Text>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              placeholder="Nhập vào email"
+              onChangeText={text => {
+                this.setState(() => {
+                  return {
+                    userName: text,
+                  };
+                });
+              }}
+              value={this.state.userName}></TextInput>
+          </View>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              secureTextEntry={true}
+              placeholder="Nhập vào mật khẩu"></TextInput>
+          </View>
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => {
@@ -29,7 +67,7 @@ export default class Login extends Component {
             <Text style={styles.textButton}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -39,7 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 400,
   },
   title: {
     fontSize: 36,
@@ -50,7 +87,7 @@ const styles = StyleSheet.create({
   textInput: {
     width: 280,
     height: 45,
-    paddingLeft: 6,
+    paddingLeft: 6
   },
   textInputContainer: {
     backgroundColor: '#f7f7f7',
