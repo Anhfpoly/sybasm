@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, Image} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import {sizes, fonts, colors} from '../constants/theme';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -17,6 +18,7 @@ import Profile from '../screens/Profile';
 import Treasury from '../screens/Treasury';
 import Statistical from '../screens/Statistical';
 import Manage from '../screens/Manage';
+import RegVehicle from '../screens/RegVehicle';
 
 const AddRecordStack = createStackNavigator({
   AddRecord: {
@@ -47,6 +49,10 @@ const ManageStack = createStackNavigator({
 const StatisticalStack = createStackNavigator({
   Statistical: Statistical,
 });
+const RegVehicleStack = createStackNavigator({
+  RegVehicle: RegVehicle,
+});
+
 //Chủ Phương Tiện
 const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
   {
@@ -54,9 +60,9 @@ const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
       screen: HistoryStack,
       navigationOptions: {
         tabBarLabel: 'Lịch Sử',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'back-in-time'} size={20} color="#4285f4"></Entypo>
+          <Entypo name={'back-in-time'} size={20} color={colors.primary}></Entypo>
         ),
       },
     },
@@ -64,9 +70,9 @@ const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
       screen: NotificationsStack,
       navigationOptions: {
         tabBarLabel: 'Thông báo',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'notification'} size={20} color="#4285f4"></Entypo>
+          <Entypo name={'notification'} size={20} color={colors.primary}></Entypo>
         ),
       },
     },
@@ -74,35 +80,45 @@ const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
       screen: ProfileStack,
       navigationOptions: {
         tabBarLabel: 'Chủ xe',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
           <MaterialCommunityIcons
             name={'motorbike'}
             size={26}
-            color="#4285f4"></MaterialCommunityIcons>
+            color={colors.primary}></MaterialCommunityIcons>
         ),
       },
     },
   },
   {
     initialRouteName: 'NotificationsStack',
-    activeColor: '#4285f4',
-    inactiveColor: '#000',
+    activeColor: colors.primary,
+    inactiveColor: colors.black,
     shifting: true,
-    barStyle: {backgroundColor: '#fff'},
+    barStyle: {backgroundColor: colors.white},
   },
 );
 
 //Giao Thông
 const PoliceNavigation = createMaterialBottomTabNavigator(
   {
+    HistoryStack: {
+      screen: HistoryStack,
+      navigationOptions: {
+        tabBarLabel: 'Lịch Sử',
+        tabBarColor: colors.white,
+        tabBarIcon: (
+          <Entypo name={'back-in-time'} size={20} color={colors.primary}></Entypo>
+        ),
+      },
+    },
     NotificationsStack: {
       screen: NotificationsStack,
       navigationOptions: {
         tabBarLabel: 'Thông báo',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'notification'} size={20} color="#4285f4"></Entypo>
+          <Entypo name={'notification'} size={20} color={colors.primary}></Entypo>
         ),
       },
     },
@@ -110,30 +126,42 @@ const PoliceNavigation = createMaterialBottomTabNavigator(
       screen: AddRecordStack,
       navigationOptions: {
         tabBarLabel: 'Biên bản',
-        tabBarColor: '#fff',
-        tabBarIcon: <Entypo name={'plus'} size={20} color="#4285f4"></Entypo>,
+        tabBarColor: colors.white,
+        tabBarIcon: <Entypo name={'plus'} size={26} color={colors.orangered}></Entypo>,
+      },
+    },
+    RegVehicleStack: {
+      screen: RegVehicleStack,
+      navigationOptions: {
+        tabBarLabel: 'Đăng ký',
+        tabBarColor: colors.white,
+        tabBarIcon: (
+          <MaterialCommunityIcons
+            name={'account-badge-horizontal-outline'}
+            size={20}
+            color={colors.primary}></MaterialCommunityIcons>
+        ),
       },
     },
     PoliceStack: {
       screen: PoliceStack,
       navigationOptions: {
-        tabBarLabel: 'Giao thông',
-        tabBarColor: '#fff',
+        tabBarLabel: 'Thông tin',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <FontAwesome5 name={'dove'} size={20} color="#4285f4"></FontAwesome5>
+          <FontAwesome5 name={'dove'} size={20} color={colors.primary}></FontAwesome5>
         ),
       },
     },
   },
   {
     initialRouteName: 'AddRecordStack',
-    activeColor: '#4285f4',
-    inactiveColor: '#000',
+    activeColor: colors.primary,
+    inactiveColor: colors.black,
     shifting: true,
-    barStyle: {backgroundColor: '#fff'},
+    barStyle: {backgroundColor: colors.white},
   },
 );
-
 
 //Kho Bạc
 const TreasuryNavigation = createMaterialBottomTabNavigator(
@@ -142,9 +170,9 @@ const TreasuryNavigation = createMaterialBottomTabNavigator(
       screen: HistoryStack,
       navigationOptions: {
         tabBarLabel: 'Lịch sử',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'back-in-time'} size={20} color="#4285f4"></Entypo>
+          <Entypo name={'back-in-time'} size={20} color={colors.primary}></Entypo>
         ),
       },
     },
@@ -152,9 +180,9 @@ const TreasuryNavigation = createMaterialBottomTabNavigator(
       screen: NotificationsStack,
       navigationOptions: {
         tabBarLabel: 'Thông báo',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'notification'} size={20} color="#4285f4"></Entypo>
+          <Entypo name={'notification'} size={20} color={colors.primary}></Entypo>
         ),
       },
     },
@@ -162,19 +190,19 @@ const TreasuryNavigation = createMaterialBottomTabNavigator(
       screen: TreasuryStack,
       navigationOptions: {
         tabBarLabel: 'Kho bạc',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <FontAwesome name={'bank'} size={18} color="#4285f4"></FontAwesome>
+          <FontAwesome name={'bank'} size={18} color={colors.primary}></FontAwesome>
         ),
       },
     },
   },
   {
     initialRouteName: 'NotificationsStack',
-    activeColor: '#4285f4',
-    inactiveColor: '#000',
+    activeColor: colors.primary,
+    inactiveColor: colors.black,
     shifting: true,
-    barStyle: {backgroundColor: '#fff'},
+    barStyle: {backgroundColor: colors.white},
   },
 );
 
@@ -185,9 +213,12 @@ const BusinessNavigation = createMaterialBottomTabNavigator(
       screen: ManageStack,
       navigationOptions: {
         tabBarLabel: 'Quản lý',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <MaterialCommunityIcons name={'account-group'} size={20} color="#4285f4"></MaterialCommunityIcons>
+          <MaterialCommunityIcons
+            name={'account-group'}
+            size={20}
+            color={colors.primary}></MaterialCommunityIcons>
         ),
       },
     },
@@ -195,9 +226,9 @@ const BusinessNavigation = createMaterialBottomTabNavigator(
       screen: NotificationsStack,
       navigationOptions: {
         tabBarLabel: 'Thông báo',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'notification'} size={20} color="#4285f4"></Entypo>
+          <Entypo name={'notification'} size={20} color={colors.primary}></Entypo>
         ),
       },
     },
@@ -205,19 +236,22 @@ const BusinessNavigation = createMaterialBottomTabNavigator(
       screen: StatisticalStack,
       navigationOptions: {
         tabBarLabel: 'Thống kê',
-        tabBarColor: '#fff',
+        tabBarColor: colors.white,
         tabBarIcon: (
-          <FontAwesome name={'line-chart'} size={20} color="#4285f4"></FontAwesome>
+          <FontAwesome
+            name={'line-chart'}
+            size={20}
+            color={colors.primary}></FontAwesome>
         ),
       },
     },
   },
   {
     initialRouteName: 'NotificationsStack',
-    activeColor: '#4285f4',
-    inactiveColor: '#000',
+    activeColor: colors.primary,
+    inactiveColor: colors.black,
     shifting: true,
-    barStyle: {backgroundColor: '#fff'},
+    barStyle: {backgroundColor: colors.white},
   },
 );
 
@@ -228,11 +262,8 @@ const SwitchNav = createSwitchNavigator({
   VehicleOwner: VehicleOwnerNavigation,
   Police: PoliceNavigation,
   Treasury: TreasuryNavigation,
-  Business: BusinessNavigation
+  Business: BusinessNavigation,
 });
 
 const AppContainer = createAppContainer(SwitchNav);
 export default AppContainer;
-
-
-

@@ -15,7 +15,8 @@ export const colors = {
   lightGray: '#E8EEEF',
   green: '#31BB62',
   black: '#000',
-  primary: '#4285f4'
+  primary: '#4285f4',
+  orangered: '#ff4800',
 };
 export const fonts = {
   light: 'Roboto-Light',
