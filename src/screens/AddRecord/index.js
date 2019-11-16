@@ -1,12 +1,14 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import React, {Component} from 'react';
+import {Text, View, SafeAreaView} from 'react-native';
+import {TextInput, Header} from '../../components';
 
 export default class AddRecord extends Component {
-    render() {
-        return (
-            <View>
-                <Text> AddRecord </Text>
-            </View>
-        )
-    }
+  static navigationOptions = {header: null};
+  render() {
+    return (
+      <SafeAreaView>
+        <Header title={'Lập biên bản'} hideBars={true} />
+      </SafeAreaView>
+    );
+  }
 }

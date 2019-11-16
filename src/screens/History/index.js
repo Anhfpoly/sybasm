@@ -1,12 +1,14 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import React, {Component} from 'react';
+import {Text, View, SafeAreaView} from 'react-native';
+import {TextInput, Header} from '../../components';
 
 export default class History extends Component {
-    render() {
-        return (
-            <View>
-                <Text> history </Text>
-            </View>
-        )
-    }
+  static navigationOptions = {header: null};
+  render() {
+    return (
+      <SafeAreaView>
+        <Header title={'Lịch sử vi phạm'} hideBars={true} />
+      </SafeAreaView>
+    );
+  }
 }

@@ -11,25 +11,23 @@ import {
 } from 'react-native';
 
 export default class Login extends Component {
-  state={
-  }
+  state = {
+    username: 'Cx',
+    password: '',
+  };
   _login() {
-    if(this.state.userName="cx"){
+    if (this.state.username === 'Cx') {
       this.props.navigation.navigate('VehicleOwner');
+    } else if (this.state.username === 'Cs') {
+      this.props.navigation.navigate('Police');
+    } else if (this.state.username === 'Kb') {
+      this.props.navigation.navigate('Treasury');
+    } else if (this.state.username === 'Dn') {
+      this.props.navigation.navigate('Business');
+    } else {
+      alert('Tài khoản đúng là: Cx, Cs, Kb, Dn ');
     }
-    if(this.state.userName="cs"){
-      this.props.navigation.navigate('VehicleOwner');
-    }
-    if(this.state.userName="kb"){
-      this.props.navigation.navigate('VehicleOwner');
-    }
-    if(this.state.userName="dn"){
-      this.props.navigation.navigate('VehicleOwner');
-    }
-
   }
-  componentDidMount() {}
-
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -47,17 +45,25 @@ export default class Login extends Component {
               onChangeText={text => {
                 this.setState(() => {
                   return {
-                    userName: text,
+                    username: text,
                   };
                 });
               }}
-              value={this.state.userName}></TextInput>
+              value={this.state.username}></TextInput>
           </View>
           <View style={styles.textInputContainer}>
             <TextInput
               style={styles.textInput}
               secureTextEntry={true}
-              placeholder="Nhập vào mật khẩu"></TextInput>
+              placeholder="Nhập vào mật khẩu"
+              onChangeText={text => {
+                this.setState(() => {
+                  return {
+                    password: text,
+                  };
+                });
+              }}
+              value={this.state.password}></TextInput>
           </View>
           <TouchableOpacity
             style={styles.loginButton}
@@ -81,13 +87,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     textAlign: 'center',
-    color: '#3b5998',
+    color: '#4285f4',
     marginBottom: 10,
   },
   textInput: {
     width: 280,
     height: 45,
-    paddingLeft: 6
+    paddingLeft: 6,
   },
   textInputContainer: {
     backgroundColor: '#f7f7f7',
@@ -102,7 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3b5998',
+    backgroundColor: '#4285f4',
   },
   textButton: {
     color: 'white',
