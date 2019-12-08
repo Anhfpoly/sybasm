@@ -5,12 +5,15 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from 'react-native-textinput-effects';
-
+import Geolocation from 'react-native-geolocation-service';
+import {LOIVIPHAM} from '../../data/loi';
 export default class AddRecord extends Component {
   static navigationOptions = {header: null};
   state = {
@@ -26,10 +29,92 @@ export default class AddRecord extends Component {
     nguoilap: '',
     ghichu: '',
     trangthai: 'Không Nhận Lỗi',
+    danhsachloi: LOIVIPHAM,
+    filtered: [],
   };
   componentDidMount() {
+    this.getLocation();
     this._getMaBienBan();
   }
+  filterData = () => {
+    let filtered = LOIVIPHAM.filter(item =>
+      item.loi.includes(this.state.loivipham),
+    );
+    this.setState({filtered});
+  };
+  hasLocationPermission = async () => {
+    if (
+      Platform.OS === 'ios' ||
+      (Platform.OS === 'android' && Platform.Version < 23)
+    ) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (hasPermission) return true;
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) return true;
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show(
+        'Location permission denied by user.',
+        ToastAndroid.LONG,
+      );
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show(
+        'Location permission revoked by user.',
+        ToastAndroid.LONG,
+      );
+    }
+
+    return false;
+  };
+
+  getAddress = async (lat, long) => {
+    return fetch(
+      `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=58f28df91776444185a70ddc4daac213&no_annotations=1&language=vi`,
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson);
+        return responseJson.results[0].formatted;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+  getLocation = async () => {
+    const hasLocationPermission = await this.hasLocationPermission();
+
+    if (!hasLocationPermission) return;
+    Geolocation.getCurrentPosition(
+      async position => {
+        console.log(position);
+        let add = await this.getAddress(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        this.setState({vitri: add});
+      },
+      error => {
+        console.log(error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+        distanceFilter: 50,
+        forceRequestLocation: true,
+      },
+    );
+  };
   _getMaBienBan = async () => {
     const ref = database().ref('irecord');
     const snapshot = await ref.once('value');
@@ -76,7 +161,6 @@ export default class AddRecord extends Component {
       this.state.bienso === '' ||
       this.state.vitri === '' ||
       this.state.nguoilap === '' ||
-      this.state.ghichu === '' ||
       this.state.trangthai === ''
     ) {
       alert('Vui lòng nhập đủ thông tin!');
@@ -107,7 +191,7 @@ export default class AddRecord extends Component {
         vitri: '',
         nguoilap: '',
         ghichu: '',
-        trangthai: ''
+        trangthai: '',
       });
     }
   };
@@ -191,11 +275,34 @@ export default class AddRecord extends Component {
               iconSize={20}
               iconWidth={40}
               inputPadding={16}
+              value={this.state.loivipham}
               onChangeText={text => {
-                this.setState({loivipham: text});
+                this.setState({loivipham: text}, () => this.filterData());
               }}
             />
           </View>
+          {this.state.filtered.length > 0 && (
+            <View
+              style={{
+                borderColor: '#4285f4',
+                borderWidth: 1,
+                borderRadius: 12,
+                marginBottom: 3,
+              }}>
+              {this.state.filtered.map(item => (
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      tienphat: item.mucphat,
+                      loivipham: item.loi,
+                      filtered: []
+                    });
+                  }}>
+                  <Text>{item.loi}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
           <View
             style={{
               borderColor: '#4285f4',
@@ -211,6 +318,7 @@ export default class AddRecord extends Component {
               iconSize={20}
               iconWidth={40}
               inputPadding={16}
+              value={this.state.tienphat}
               onChangeText={text => {
                 this.setState({tienphat: text});
               }}
@@ -270,6 +378,7 @@ export default class AddRecord extends Component {
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
+              value={this.state.vitri}
               inputPadding={16}
               onChangeText={text => {
                 this.setState({vitri: text});
