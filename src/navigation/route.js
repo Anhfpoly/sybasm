@@ -155,7 +155,7 @@ const PoliceNavigation = createMaterialBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'AddRecordStack',
+    initialRouteName: 'HistoryStack',
     activeColor: colors.primary,
     inactiveColor: colors.black,
     shifting: true,

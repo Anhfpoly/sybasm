@@ -28,19 +28,34 @@ export default class AddRecord extends Component {
     vitri: '',
     nguoilap: '',
     ghichu: '',
-    trangthai: 'Không Nhận Lỗi',
+    trangthai: 'Chưa đúng lỗi',
     danhsachloi: LOIVIPHAM,
     filtered: [],
+    danhsachxe: [],
+    filterxe: [],
   };
   componentDidMount() {
+    this._getDSXe();
+    this.getNgayGio();
     this.getLocation();
     this._getMaBienBan();
   }
   filterData = () => {
     let filtered = LOIVIPHAM.filter(item =>
-      item.loi.includes(this.state.loivipham),
+      item.loi.toLowerCase().includes(this.state.loivipham.toLowerCase()),
     );
     this.setState({filtered});
+  };
+  filterXe = value => {
+    let filterxe = Object.values(this.state.danhsachxe).filter(item =>
+      item.bienso.toLowerCase().includes(value.toLowerCase()),
+    );
+    this.setState({filterxe});
+  };
+  _getDSXe = async () => {
+    const ref = database().ref('vehicles');
+    const snapshot = await ref.once('value');
+    this.setState({danhsachxe: snapshot.val()});
   };
   hasLocationPermission = async () => {
     if (
@@ -83,7 +98,6 @@ export default class AddRecord extends Component {
     )
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson);
         return responseJson.results[0].formatted;
       })
       .catch(error => {
@@ -96,12 +110,11 @@ export default class AddRecord extends Component {
     if (!hasLocationPermission) return;
     Geolocation.getCurrentPosition(
       async position => {
-        console.log(position);
-        let add = await this.getAddress(
+        let addr = await this.getAddress(
           position.coords.latitude,
           position.coords.longitude,
         );
-        this.setState({vitri: add});
+        this.setState({vitri: addr});
       },
       error => {
         console.log(error);
@@ -117,23 +130,24 @@ export default class AddRecord extends Component {
   };
   _getMaBienBan = async () => {
     const ref = database().ref('irecord');
-    const snapshot = await ref.once('value');
-    let mabb = snapshot.val() + 1;
-    if (mabb <= 9) {
-      mabb = '00000' + mabb;
-    } else if (mabb <= 99) {
-      mabb = '0000' + mabb;
-    } else if (mabb <= 999) {
-      mabb = '000' + mabb;
-    } else if (mabb <= 9999) {
-      mabb = '00' + mabb;
-    } else if (mabb <= 99999) {
-      mabb = '0' + mabb;
-    } else if (mabb <= 999999) {
-      mabb = mabb;
-    }
-    this.setState({
-      mabienban: mabb,
+    ref.on('value', snapshot => {
+      let mabb = snapshot.val() + 1;
+      if (mabb <= 9) {
+        mabb = '00000' + mabb;
+      } else if (mabb <= 99) {
+        mabb = '0000' + mabb;
+      } else if (mabb <= 999) {
+        mabb = '000' + mabb;
+      } else if (mabb <= 9999) {
+        mabb = '00' + mabb;
+      } else if (mabb <= 99999) {
+        mabb = '0' + mabb;
+      } else if (mabb <= 999999) {
+        mabb = mabb;
+      }
+      this.setState({
+        mabienban: mabb,
+      });
     });
   };
   _setIndexRecord = async () => {
@@ -195,6 +209,44 @@ export default class AddRecord extends Component {
       });
     }
   };
+  getNgayGio = () => {
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    var hours = new Date().getHours();
+    var min = new Date().getMinutes();
+    var sec = new Date().getSeconds();
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (hours < 10) {
+      hours = '0' + hours;
+    }
+    if (min < 10) {
+      min = '0' + min;
+    }
+    if (sec < 10) {
+      sec = '0' + sec;
+    }
+    this.setState({
+      ngaygio:
+        'Ngày ' +
+        date +
+        '/' +
+        month +
+        '/' +
+        year +
+        ' lúc ' +
+        hours +
+        ':' +
+        min +
+        ':' +
+        sec,
+    });
+  };
   _regVehicle() {
     this._setData();
   }
@@ -216,10 +268,70 @@ export default class AddRecord extends Component {
               height: 40,
             }}>
             <Text
-              style={{lineHeight: 40, textAlign: 'center', color: '#ff4800'}}>
+              style={{
+                lineHeight: 40,
+                textAlign: 'center',
+                color: '#ff4800',
+                fontSize: 20,
+              }}>
               Mã Biên Bản: {this.state.mabienban}
             </Text>
           </View>
+          <View
+            style={{
+              borderColor: '#4285f4',
+              borderWidth: 1,
+              borderRadius: 12,
+              marginBottom: 3,
+            }}>
+            <Fumi
+              label={'Xe Vi Phạm'}
+              iconClass={FontAwesomeIcon}
+              iconName={'university'}
+              iconColor={'#4285f4'}
+              iconSize={20}
+              iconWidth={40}
+              inputPadding={16}
+              value={this.state.bienso}
+              onChangeText={text => {
+                this.setState({bienso: text}, () => this.filterXe(text));
+              }}
+            />
+          </View>
+          {this.state.filterxe.length > 0 && (
+            <View
+              style={{
+                borderColor: '#4285f4',
+                borderWidth: 1,
+                borderRadius: 12,
+                marginBottom: 3,
+                padding: 6,
+              }}>
+              {this.state.filterxe.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    this.setState({
+                      bienso: item.bienso,
+                      dienthoai: item.dienthoai,
+                      nguoivipham: item.chuxe,
+                      filterxe: [],
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      borderColor: '#4285f4',
+                      borderWidth: 1,
+                      borderRadius: 12,
+                      marginBottom: 3,
+                      padding: 6,
+                    }}>
+                    {item.bienso}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
           <View
             style={{
               borderColor: '#4285f4',
@@ -235,6 +347,7 @@ export default class AddRecord extends Component {
               iconSize={20}
               iconWidth={40}
               inputPadding={16}
+              value={this.state.nguoivipham}
               onChangeText={text => {
                 this.setState({nguoivipham: text});
               }}
@@ -255,6 +368,7 @@ export default class AddRecord extends Component {
               iconSize={20}
               iconWidth={40}
               inputPadding={16}
+              value={this.state.dienthoai}
               onChangeText={text => {
                 this.setState({dienthoai: text});
               }}
@@ -288,17 +402,28 @@ export default class AddRecord extends Component {
                 borderWidth: 1,
                 borderRadius: 12,
                 marginBottom: 3,
+                padding: 6,
               }}>
-              {this.state.filtered.map(item => (
+              {this.state.filtered.map((item, index) => (
                 <TouchableOpacity
+                  key={index}
                   onPress={() => {
                     this.setState({
                       tienphat: item.mucphat,
                       loivipham: item.loi,
-                      filtered: []
+                      filtered: [],
                     });
                   }}>
-                  <Text>{item.loi}</Text>
+                  <Text
+                    style={{
+                      borderColor: '#4285f4',
+                      borderWidth: 1,
+                      borderRadius: 12,
+                      marginBottom: 3,
+                      padding: 6,
+                    }}>
+                    {item.loi}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -339,28 +464,9 @@ export default class AddRecord extends Component {
               iconSize={20}
               iconWidth={40}
               inputPadding={16}
+              value={this.state.ngaygio}
               onChangeText={text => {
                 this.setState({ngaygio: text});
-              }}
-            />
-          </View>
-          <View
-            style={{
-              borderColor: '#4285f4',
-              borderWidth: 1,
-              borderRadius: 12,
-              marginBottom: 3,
-            }}>
-            <Fumi
-              label={'Xe Vi Phạm'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
-              iconColor={'#4285f4'}
-              iconSize={20}
-              iconWidth={40}
-              inputPadding={16}
-              onChangeText={text => {
-                this.setState({bienso: text});
               }}
             />
           </View>
