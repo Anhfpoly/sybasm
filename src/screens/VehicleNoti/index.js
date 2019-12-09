@@ -27,6 +27,16 @@ export default class VehicleNoti extends Component {
     danhsachvipham: [],
     visible: false,
     mabienban: '',
+    bienso: '',
+    dienthoai: '',
+    ghichu: '',
+    loivipham: '',
+    ngaygio: '',
+    nguoilap: '',
+    nguoivipham: '',
+    tienphat: '',
+    trangthai: 'Chưa đúng lỗi',
+    vitri: '',
   };
   showDialog = () => {
     this.setState({visible: true});
@@ -77,7 +87,20 @@ export default class VehicleNoti extends Component {
                   }}
                   key={index}
                   onPress={() => {
-                    this.setState({visible: true, mabienban: item.mabienban});
+                    this.setState({
+                      visible: true,
+                      mabienban: item.mabienban,
+                      bienso: item.bienso,
+                      dienthoai: item.dienthoai,
+                      ghichu: item.ghichu,
+                      loivipham: item.loivipham,
+                      ngaygio: item.ngaygio,
+                      nguoilap: item.nguoilap,
+                      nguoivipham: item.nguoivipham,
+                      tienphat: item.tienphat,
+                      trangthai: item.trangthai,
+                      vitri: item.vitri,
+                    });
                   }}>
                   <Text
                     numberOfLines={1}
@@ -156,7 +179,49 @@ export default class VehicleNoti extends Component {
                       <Text style={{fontSize: 12}}>
                         Căn cứ: luật xử lý vi phạm hành chính
                       </Text>
-                      <Text style={{fontSize: 12}}>Ngày: </Text>
+                      <Text style={{fontSize: 12}}>
+                        Ngày: {this.state.ngaygio}
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        Tại: {this.state.vitri}
+                      </Text>
+                      <Text style={{fontSize: 12}}>Chúng tôi gồm:</Text>
+                      <Text style={{fontSize: 12}}>
+                        {'1. Lê Văn '}
+                        {this.state.nguoilap}
+                      </Text>
+                      <Text style={{fontSize: 12}}>Cấp bậc, chức vụ:</Text>
+                      <Text style={{fontSize: 12}}>
+                        Tiến hành lập biên bản vi phạm hành chính với:
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Ông(Bà)/Tổ chức: '}
+                        {this.state.nguoivipham}
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Điện thoại: '}
+                        {this.state.dienthoai}
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Nội dung vi phạm: \n'}
+                        {this.state.loivipham}
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Số tiền nộp phạt: \n'}
+                        {this.state.tienphat}
+                      </Text>
+                    </View>
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          marginTop: 30,
+                          color: 'red'
+                        }}>
+                        {'Xác nhận những lỗi trên là?'}
+                      </Text>
                     </View>
                   </DialogContent>
                 </Dialog>
