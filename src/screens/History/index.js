@@ -16,12 +16,18 @@ import {Fumi} from 'react-native-textinput-effects';
 export default class History extends Component {
   static navigationOptions = {header: null};
   state = {
-    danhsachvipham: []
+    danhsachvipham: [],
   };
   componentDidMount() {
-    this._getDSViPham();
+    this._getDSViPham("anh");
   }
-  _getDSViPham = () => {
+  filterData = (value) => {
+    let filtered = Object.values(this.state.danhsachvipham).filter(item =>
+      item.nguoilap.toLowerCase().includes(value.toLowerCase()),
+    );
+    this.setState({filtered});
+  };
+  _getDSViPham = (value) => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
       let danhsachvipham = [];
@@ -29,7 +35,10 @@ export default class History extends Component {
         var childData = childSnapshot.val();
         danhsachvipham.push(childData);
       });
-      this.setState({danhsachvipham: danhsachvipham});
+      let filtered = Object.values(danhsachvipham).filter(item =>
+        item.nguoilap.toLowerCase().includes(value.toLowerCase()),
+      );
+      this.setState({danhsachvipham: filtered});
     });
   };
   render() {
