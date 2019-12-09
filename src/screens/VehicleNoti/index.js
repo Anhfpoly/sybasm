@@ -19,7 +19,6 @@ import Dialog, {
   ScaleAnimation,
   DialogContent,
 } from 'react-native-popup-dialog';
-import {bold} from 'ansi-colors';
 
 export default class VehicleNoti extends Component {
   static navigationOptions = {header: null};
@@ -38,12 +37,40 @@ export default class VehicleNoti extends Component {
     trangthai: 'Chưa đúng lỗi',
     vitri: '',
   };
-  showDialog = () => {
-    this.setState({visible: true});
-  };
   componentDidMount() {
     this._getDSViPham('61D');
   }
+  _updateData = async () => {
+    const ref = database().ref('vehicles');
+    if (
+      this.state.chuxe === '' ||
+      this.state.dienthoai === '' ||
+      this.state.diachi === '' ||
+      this.state.loaixe === '' ||
+      this.state.mauxe === '' ||
+      this.state.bienso === '' ||
+      this.state.sokhung === '' ||
+      this.state.somay === '' ||
+      this.state.ngaycap === '' ||
+      this.state.noicap === ''
+    ) {
+      alert('Vui lòng nhập đủ thông tin!');
+    } else {
+      ref.update({
+        chuxe: this.state.chuxe,
+        dienthoai: this.state.dienthoai,
+        diachi: this.state.diachi,
+        loaixe: this.state.loaixe,
+        mauxe: this.state.mauxe,
+        bienso: this.state.bienso,
+        sokhung: this.state.sokhung,
+        somay: this.state.somay,
+        ngaycap: this.state.ngaycap,
+        noicap: this.state.noicap,
+      });
+      alert('Xác nhận thành công!');
+    }
+  };
   _getDSViPham = value => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {

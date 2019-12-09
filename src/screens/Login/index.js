@@ -9,70 +9,182 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import Dialog, {
+  DialogFooter,
+  DialogButton,
+  ScaleAnimation,
+  DialogContent,
+} from 'react-native-popup-dialog';
 
 export default class Login extends Component {
   state = {
-    username: 'Cx',
-    password: '',
+    phone: '',
+    otp: '',
+    visible: false,
+    isphone: true,
+    isnext: false,
   };
   _login() {
-    if (this.state.username === 'Cx') {
+    this.setState({visible: true});
+  }
+  _khong() {
+    this.setState({visible: false});
+  }
+  _tieptuc() {
+    this.setState({visible: false});
+    let timer = setTimeout(() => {
+      this.setState({isnext: !this.state.isnext});
+    }, 300);
+  }
+  _gotoMain() {
+    if (this.state.otp === 'Cx') {
       this.props.navigation.navigate('VehicleOwner');
-    } else if (this.state.username === 'Cs') {
+    } else if (this.state.otp === 'Cs') {
       this.props.navigation.navigate('Police');
-    } else if (this.state.username === 'Kb') {
-      this.props.navigation.navigate('Treasury');
-    } else if (this.state.username === 'Dn') {
-      this.props.navigation.navigate('Business');
-    } else {
-      alert('Tài khoản đúng là: Cx, Cs, Kb, Dn ');
     }
   }
+
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          {/* <Image
-            source={require('../../images/logo.png')}
-            style={styles.logo}></Image> */}
-          <Text style={styles.title}>Đăng Nhập</Text>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              textContentType="emailAddress"
-              keyboardType="email-address"
-              placeholder="Nhập vào email"
-              onChangeText={text => {
-                this.setState(() => {
-                  return {
-                    username: text,
-                  };
-                });
-              }}
-              value={this.state.username}></TextInput>
+        {this.state.isnext ? (
+          <View style={styles.container}>
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}></Image>
+            <Text style={{fontSize: 26, fontWeight: 'bold', color: '#4285f4'}}>
+              Xác thực OTP
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#4285f4',
+                paddingHorizontal: 60,
+                paddingVertical: 12,
+                textAlign: 'center',
+              }}>
+              {'Một mã xác thực đã được gửi đến\n'}{this.state.phone}
+            </Text>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                textContentType="telephoneNumber"
+                keyboardType="number-pad"
+                placeholder="Nhập OTP"
+                placeholderTextColor="#000"
+                onChangeText={text => {
+                  this.setState(() => {
+                    return {
+                      otp: text,
+                      isphone: false,
+                    };
+                  });
+                }}
+                value={this.state.otp}></TextInput>
+            </View>
+            <TouchableOpacity
+              disabled={this.state.isphone}
+              style={styles.loginButton}
+              onPress={() => {
+                this._gotoMain();
+              }}>
+              <Text style={styles.textButton}>TIẾP TỤC</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              secureTextEntry={true}
-              placeholder="Nhập vào mật khẩu"
-              onChangeText={text => {
-                this.setState(() => {
-                  return {
-                    password: text,
-                  };
-                });
-              }}
-              value={this.state.password}></TextInput>
+        ) : (
+          <View style={styles.container}>
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}></Image>
+            <Text style={{fontSize: 26, fontWeight: 'bold', color: '#4285f4'}}>
+              Nhập số điện thoại
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#4285f4',
+                paddingHorizontal: 60,
+                paddingVertical: 12,
+                textAlign: 'center',
+              }}>
+              Dùng số điện thoại để đăng nhập vào Traffic Bee
+            </Text>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                textContentType="telephoneNumber"
+                keyboardType="number-pad"
+                placeholder="Nhập số điện thoại"
+                placeholderTextColor="#000"
+                onChangeText={text => {
+                  this.setState(() => {
+                    return {
+                      phone: text,
+                      isphone: false,
+                    };
+                  });
+                }}
+                value={this.state.phone}></TextInput>
+            </View>
+            <TouchableOpacity
+              disabled={this.state.isphone}
+              style={styles.loginButton}
+              onPress={() => {
+                this._login();
+              }}>
+              <Text style={styles.textButton}>TIẾP TỤC</Text>
+            </TouchableOpacity>
+            <View>
+              <Dialog
+                visible={this.state.visible}
+                onTouchOutside={() => {
+                  this.setState({visible: false});
+                }}
+                footer={
+                  <DialogFooter>
+                    <DialogButton
+                      text="Không"
+                      onPress={() => {
+                        this._khong();
+                      }}
+                    />
+                    <DialogButton
+                      text="Tiếp Tục"
+                      onPress={() => {
+                        this._tieptuc();
+                      }}
+                    />
+                  </DialogFooter>
+                }
+                dialogAnimation={
+                  new ScaleAnimation({
+                    slideFrom: 'bottom',
+                  })
+                }>
+                <DialogContent>
+                  <View
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{margin: 12}}>Bạn đã nhập</Text>
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: 23,
+                        marginBottom: 20,
+                      }}>
+                      {this.state.phone}
+                    </Text>
+                    <Text style={{fontSize: 12, width: 260}}>
+                      Chúng tôi sẽ gửi một mã xác thực đến số điện thoại bạn đã
+                      nhập. Bạn có muốn tiếp tục?
+                    </Text>
+                  </View>
+                </DialogContent>
+              </Dialog>
+            </View>
           </View>
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={() => {
-              this._login();
-            }}>
-            <Text style={styles.textButton}>Đăng nhập</Text>
-          </TouchableOpacity>
-        </View>
+        )}
       </TouchableWithoutFeedback>
     );
   }
@@ -94,18 +206,19 @@ const styles = StyleSheet.create({
     width: 280,
     height: 45,
     paddingLeft: 6,
+    textAlign: 'center',
   },
   textInputContainer: {
     backgroundColor: '#f7f7f7',
     marginBottom: 10,
-    borderRadius: 6,
+    borderRadius: 50,
     borderWidth: 1 / 2,
     borderColor: 'gray',
   },
   loginButton: {
     width: 280,
     height: 45,
-    borderRadius: 6,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#4285f4',
