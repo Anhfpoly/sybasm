@@ -13,20 +13,14 @@ import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from 'react-native-textinput-effects';
 
-export default class History extends Component {
+export default class VehicleNoti extends Component {
   static navigationOptions = {header: null};
   state = {
     danhsachvipham: [],
   };
   componentDidMount() {
-    this._getDSViPham("anh");
+    this._getDSViPham("61D");
   }
-  filterData = (value) => {
-    let filtered = Object.values(this.state.danhsachvipham).filter(item =>
-      item.nguoilap.toLowerCase().includes(value.toLowerCase()),
-    );
-    this.setState({filtered});
-  };
   _getDSViPham = (value) => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
@@ -36,7 +30,7 @@ export default class History extends Component {
         danhsachvipham.push(childData);
       });
       let filtered = Object.values(danhsachvipham).filter(item =>
-        item.nguoilap.toLowerCase().includes(value.toLowerCase()),
+        item.bienso.toLowerCase().includes(value.toLowerCase()),
       );
       this.setState({danhsachvipham: filtered});
     });
@@ -44,7 +38,7 @@ export default class History extends Component {
   render() {
     return (
       <SafeAreaView>
-        <Header title={'Danh sách biên bản vi phạm'} hideBars={true} />
+        <Header title={'Thông báo vi phạm'} hideBars={true} />
         <ScrollView
           style={{
             marginHorizontal: 2,
@@ -55,7 +49,6 @@ export default class History extends Component {
             <View
               style={{
                 padding: 3,
-                marginBottom: 60,
               }}>
               {this.state.danhsachvipham.map((item, index) => (
                 <TouchableOpacity

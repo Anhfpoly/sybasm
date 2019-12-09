@@ -15,6 +15,7 @@ import History from '../screens/History';
 import Search from '../screens/Search';
 import Login from '../screens/Login';
 import Notifications from '../screens/Notifications';
+import VehicleNoti from '../screens/VehicleNoti';
 import Police from '../screens/Police';
 import Profile from '../screens/Profile';
 import Treasury from '../screens/Treasury';
@@ -38,6 +39,9 @@ const LoginStack = createStackNavigator({
 });
 const NotificationsStack = createStackNavigator({
   Notifications: Notifications,
+});
+const VehicleNotiStack = createStackNavigator({
+  VehicleNoti: VehicleNoti,
 });
 const PoliceStack = createStackNavigator({
   Police: Police,
@@ -64,15 +68,15 @@ const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
     SearchStack: {
       screen: SearchStack,
       navigationOptions: {
-        tabBarLabel: 'Tra Luật',
+        tabBarLabel: 'Tra Cứu',
         tabBarColor: colors.white,
         tabBarIcon: (
           <Feather name={'search'} size={20} color={colors.primary}></Feather>
         ),
       },
     },
-    NotificationsStack: {
-      screen: NotificationsStack,
+    VehicleNotiStack: {
+      screen: VehicleNotiStack,
       navigationOptions: {
         tabBarLabel: 'Thông báo',
         tabBarColor: colors.white,
@@ -96,7 +100,7 @@ const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'NotificationsStack',
+    initialRouteName: 'VehicleNotiStack',
     activeColor: colors.primary,
     inactiveColor: colors.black,
     shifting: true,
