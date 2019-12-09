@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform
 } from 'react-native';
 import Dialog, {
   DialogFooter,
@@ -15,15 +16,54 @@ import Dialog, {
   ScaleAnimation,
   DialogContent,
 } from 'react-native-popup-dialog';
-
+import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
 export default class Login extends Component {
   state = {
-    phone: '',
+    phone: '+84949121291',
     otp: '',
     visible: false,
     isphone: true,
     isnext: false,
+    user: null,
+    logged: false
   };
+  componentDidMount() {
+    this._checkLogin();
+  }
+  _checkLogin = () => {
+    this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ user: user.toJSON(), logged: true }, () =>  this.props.navigation.navigate('VehicleOwner'));
+      } else {
+        console.log('Đăng nhập thất bại');
+      }
+    });
+  };
+  _phoneAuth = async () => {
+    try {
+      const confirmResult = await auth().signInWithPhoneNumber(this.state.phone);
+      this.setState({confirmResult})
+    } catch (e) {
+      console.error(e); // Invalid code
+    }
+  };
+  confirmCode = () => {
+    const { otp, confirmResult } = this.state;
+
+    if (confirmResult && otp.length) {
+      confirmResult.confirm(otp)
+        .then((user) => {
+          return user
+        })
+        .catch(error => this.setState({ message: `Code Confirm Error: ${error.message}` }));
+    }
+    return null;
+  };
+
+  componentWillUnmount() {
+    if (this.unsubscribe) this.unsubscribe();
+ }
   _login() {
     this.setState({visible: true});
   }
@@ -31,17 +71,20 @@ export default class Login extends Component {
     this.setState({visible: false});
   }
   _tieptuc() {
+    if(Platform.OS = 'android'){this._phoneAuth()};
     this.setState({visible: false});
     let timer = setTimeout(() => {
       this.setState({isnext: !this.state.isnext});
     }, 300);
   }
   _gotoMain() {
-    if (this.state.otp === 'Cx') {
-      this.props.navigation.navigate('VehicleOwner');
-    } else if (this.state.otp === 'Cs') {
-      this.props.navigation.navigate('Police');
-    }
+    let result = this.confirmCode();
+    // if (result) {
+    //   this.setState({ logged: true, user: user.toJSON() }, () => this.props.navigation.navigate('VehicleOwner'));
+    // }
+    //  else if (this.state.otp === 'Cs') {
+    //   this.props.navigation.navigate('Police');
+    // }
   }
 
   render() {
@@ -64,7 +107,8 @@ export default class Login extends Component {
                 paddingVertical: 12,
                 textAlign: 'center',
               }}>
-              {'Một mã xác thực đã được gửi đến\n'}{this.state.phone}
+              {'Một mã xác thực đã được gửi đến\n'}
+              {this.state.phone}
             </Text>
             <View style={styles.textInputContainer}>
               <TextInput
