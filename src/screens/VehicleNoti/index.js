@@ -19,9 +19,9 @@ export default class VehicleNoti extends Component {
     danhsachvipham: [],
   };
   componentDidMount() {
-    this._getDSViPham("61D");
+    this._getDSViPham('61D');
   }
-  _getDSViPham = (value) => {
+  _getDSViPham = value => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
       let danhsachvipham = [];
@@ -35,6 +35,11 @@ export default class VehicleNoti extends Component {
       this.setState({danhsachvipham: filtered});
     });
   };
+  _notidetail(value) {
+    return <View>
+        <Text>{value.mabienban}</Text>
+    </View>;
+  }
   render() {
     return (
       <SafeAreaView>
@@ -61,9 +66,7 @@ export default class VehicleNoti extends Component {
                   }}
                   key={index}
                   onPress={() => {
-                    this.setState({
-                      bienso: item.bienso,
-                    });
+                    this._notidetail(item);
                   }}>
                   <Text
                     numberOfLines={1}
@@ -89,7 +92,12 @@ export default class VehicleNoti extends Component {
                   </Text>
                   <View style={{flexDirection: 'row'}}>
                     <Text>{'Xác nhận: '}</Text>
-                    <Text numberOfLines={1} style={{color: item.trangthai === "Chưa đúng lỗi" ? "red": "green" }}>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        color:
+                          item.trangthai === 'Chưa đúng lỗi' ? 'red' : 'green',
+                      }}>
                       {item.trangthai}
                     </Text>
                   </View>
