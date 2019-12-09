@@ -7,10 +7,12 @@ import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Welcome from '../screens/Welcome';
 import AddRecord from '../screens/AddRecord';
 import History from '../screens/History';
+import Search from '../screens/Search';
 import Login from '../screens/Login';
 import Notifications from '../screens/Notifications';
 import Police from '../screens/Police';
@@ -27,6 +29,9 @@ const AddRecordStack = createStackNavigator({
 });
 const HistoryStack = createStackNavigator({
   History: History,
+});
+const SearchStack = createStackNavigator({
+  Search: Search,
 });
 const LoginStack = createStackNavigator({
   Login: Login,
@@ -56,13 +61,13 @@ const RegVehicleStack = createStackNavigator({
 //Chủ Phương Tiện
 const VehicleOwnerNavigation = createMaterialBottomTabNavigator(
   {
-    HistoryStack: {
-      screen: HistoryStack,
+    SearchStack: {
+      screen: SearchStack,
       navigationOptions: {
-        tabBarLabel: 'Lịch Sử',
+        tabBarLabel: 'Tra Luật',
         tabBarColor: colors.white,
         tabBarIcon: (
-          <Entypo name={'back-in-time'} size={20} color={colors.primary}></Entypo>
+          <Feather name={'search'} size={20} color={colors.primary}></Feather>
         ),
       },
     },

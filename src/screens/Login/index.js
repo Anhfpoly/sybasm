@@ -12,7 +12,7 @@ import {
 
 export default class Login extends Component {
   state = {
-    username: 'Cs',
+    username: 'Cx',
     password: '',
   };
   _login() {
