@@ -34,30 +34,54 @@ export default class VehicleNoti extends Component {
     nguoilap: '',
     nguoivipham: '',
     tienphat: '',
-    trangthai: 'Chưa đúng lỗi',
+    trangthai: 'Chưa xác nhận',
     vitri: '',
+    itemId: '',
   };
   componentDidMount() {
     this._getDSViPham('61D');
   }
+  _updateData = async status => {
+    const ref = database().ref('records/' + this.state.itemId);
+    ref.set({
+      mabienban: this.state.mabienban,
+      nguoivipham: this.state.nguoivipham,
+      dienthoai: this.state.dienthoai,
+      loivipham: this.state.loivipham,
+      tienphat: this.state.tienphat,
+      ngaygio: this.state.ngaygio,
+      bienso: this.state.bienso,
+      vitri: this.state.vitri,
+      nguoilap: this.state.nguoilap,
+      ghichu: this.state.ghichu,
+      trangthai: status,
+    });
+  };
   _getDSViPham = value => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
       let danhsachvipham = [];
       snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
         var childData = childSnapshot.val();
-        danhsachvipham.push(childData);
+        danhsachvipham.push({id: key, ...childData});
       });
-      let filtered = Object.values(danhsachvipham).filter(item =>
+      let filtered = danhsachvipham.filter(item =>
         item.bienso.toLowerCase().includes(value.toLowerCase()),
       );
+      // console.log(filtered)
       this.setState({danhsachvipham: filtered});
     });
   };
   _sai() {
     this.setState({visible: false});
+    this._updateData('Sai lỗi');
   }
   _dung() {
+    this.setState({visible: false});
+    this._updateData('Đúng lỗi');
+  }
+  _nopphat() {
     this.setState({visible: false});
   }
   render() {
@@ -100,6 +124,7 @@ export default class VehicleNoti extends Component {
                       tienphat: item.tienphat,
                       trangthai: item.trangthai,
                       vitri: item.vitri,
+                      itemId: item.id,
                     });
                   }}>
                   <Text
@@ -129,8 +154,7 @@ export default class VehicleNoti extends Component {
                     <Text
                       numberOfLines={1}
                       style={{
-                        color:
-                          item.trangthai === 'Chưa đúng lỗi' ? 'red' : 'green',
+                        color: item.trangthai === 'Sai lỗi' ? 'red' : 'green',
                       }}>
                       {item.trangthai}
                     </Text>
@@ -145,18 +169,29 @@ export default class VehicleNoti extends Component {
                   }}
                   footer={
                     <DialogFooter>
-                      <DialogButton
-                        text="Sai"
-                        onPress={() => {
-                          this._sai();
-                        }}
-                      />
-                      <DialogButton
-                        text="Đúng"
-                        onPress={() => {
-                          this._dung();
-                        }}
-                      />
+                      {this.state.trangthai === 'Đúng lỗi' ? (
+                        <DialogButton
+                          text="Nộp Phạt"
+                          onPress={() => {
+                            this._nopphat();
+                          }}
+                        />
+                      ) : (
+                        <>
+                          <DialogButton
+                            text="Sai Lỗi"
+                            onPress={() => {
+                              this._sai();
+                            }}
+                          />
+                          <DialogButton
+                            text="Đúng Lỗi"
+                            onPress={() => {
+                              this._dung();
+                            }}
+                          />
+                        </>
+                      )}
                     </DialogFooter>
                   }
                   dialogAnimation={
@@ -219,18 +254,6 @@ export default class VehicleNoti extends Component {
                       <Text style={{fontSize: 12}}>
                         {'Số tiền nộp phạt: \n'}
                         {this.state.tienphat}
-                      </Text>
-                    </View>
-                    <View
-                      style={{justifyContent: 'center', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 'bold',
-                          marginTop: 30,
-                          color: 'red',
-                        }}>
-                        {'Xác nhận những lỗi trên là?'}
                       </Text>
                     </View>
                   </DialogContent>

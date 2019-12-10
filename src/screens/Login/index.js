@@ -34,7 +34,7 @@ export default class Login extends Component {
   _checkLogin = () => {
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ user: user.toJSON(), logged: true }, () =>  this.props.navigation.navigate('VehicleOwner'));
+        this.setState({ user: user.toJSON(), logged: true }, () =>  this.props.navigation.navigate('Police'));
       } else {
         console.log('Đăng nhập thất bại');
       }
