@@ -13,9 +13,6 @@ export default class Police extends Component {
     return (
       <SafeAreaView>
         <Header title={'Thông tin cảnh sát'} hideBars={true} />
-        <Image
-              source={require('../../assets/images/logo.png')}
-              style={styles.logo}></Image>
         <TouchableOpacity onPress={() => this.signOut()}>
           <Text style={{padding: 10, backgroundColor:'red', color:'#FFF'}}>Đăng xuất</Text>
         </TouchableOpacity>

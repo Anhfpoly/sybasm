@@ -19,7 +19,7 @@ export default class History extends Component {
     danhsachvipham: [],
   };
   componentDidMount() {
-    this._getDSViPham('anh');
+    this._getDSViPham('em');
   }
   filterData = value => {
     let filtered = Object.values(this.state.danhsachvipham).filter(item =>

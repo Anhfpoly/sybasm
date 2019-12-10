@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Platform
+  Platform,
 } from 'react-native';
 import Dialog, {
   DialogFooter,
@@ -26,7 +26,7 @@ export default class Login extends Component {
     isphone: false,
     isnext: false,
     user: null,
-    logged: false
+    logged: false,
   };
   componentDidMount() {
     this._checkLogin();
@@ -34,7 +34,10 @@ export default class Login extends Component {
   _checkLogin = () => {
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ user: user.toJSON(), logged: true }, () =>  this.props.navigation.navigate('Police'));
+        console.log(user.toJSON());
+        this.setState({user: user.toJSON(), logged: true}, () =>
+          this.props.navigation.navigate('Police'),
+        );
       } else {
         console.log('Đăng nhập thất bại');
       }
@@ -42,28 +45,33 @@ export default class Login extends Component {
   };
   _phoneAuth = async () => {
     try {
-      const confirmResult = await auth().signInWithPhoneNumber(this.state.phone);
-      this.setState({confirmResult})
+      const confirmResult = await auth().signInWithPhoneNumber(
+        this.state.phone,
+      );
+      this.setState({confirmResult});
     } catch (e) {
       console.error(e); // Invalid code
     }
   };
   confirmCode = () => {
-    const { otp, confirmResult } = this.state;
+    const {otp, confirmResult} = this.state;
 
     if (confirmResult && otp.length) {
-      confirmResult.confirm(otp)
-        .then((user) => {
-          return user
+      confirmResult
+        .confirm(otp)
+        .then(user => {
+          return user;
         })
-        .catch(error => this.setState({ message: `Code Confirm Error: ${error.message}` }));
+        .catch(error =>
+          this.setState({message: `Code Confirm Error: ${error.message}`}),
+        );
     }
     return null;
   };
 
   componentWillUnmount() {
     if (this.unsubscribe) this.unsubscribe();
- }
+  }
   _login() {
     this.setState({visible: true});
   }
@@ -71,7 +79,9 @@ export default class Login extends Component {
     this.setState({visible: false});
   }
   _tieptuc() {
-    if(Platform.OS = 'android'){this._phoneAuth()};
+    if ((Platform.OS = 'android')) {
+      this._phoneAuth();
+    }
     this.setState({visible: false});
     let timer = setTimeout(() => {
       this.setState({isnext: !this.state.isnext});
