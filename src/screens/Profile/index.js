@@ -12,7 +12,7 @@ export default class Profile extends Component {
   render() {
     return (
       <SafeAreaView>
-        <Header title={'Thông tin phương tiện'} hideBars={true} />
+        <Header title={'Thông tin chủ phương tiện'} hideBars={true} />
         <TouchableOpacity onPress={() => this.signOut()}>
           <Text style={{padding: 10, backgroundColor:'red', color:'#FFF'}}>Đăng xuất</Text>
         </TouchableOpacity>

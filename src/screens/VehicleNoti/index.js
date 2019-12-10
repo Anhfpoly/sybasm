@@ -40,37 +40,6 @@ export default class VehicleNoti extends Component {
   componentDidMount() {
     this._getDSViPham('61D');
   }
-  _updateData = async () => {
-    const ref = database().ref('vehicles');
-    if (
-      this.state.chuxe === '' ||
-      this.state.dienthoai === '' ||
-      this.state.diachi === '' ||
-      this.state.loaixe === '' ||
-      this.state.mauxe === '' ||
-      this.state.bienso === '' ||
-      this.state.sokhung === '' ||
-      this.state.somay === '' ||
-      this.state.ngaycap === '' ||
-      this.state.noicap === ''
-    ) {
-      alert('Vui lòng nhập đủ thông tin!');
-    } else {
-      ref.update({
-        chuxe: this.state.chuxe,
-        dienthoai: this.state.dienthoai,
-        diachi: this.state.diachi,
-        loaixe: this.state.loaixe,
-        mauxe: this.state.mauxe,
-        bienso: this.state.bienso,
-        sokhung: this.state.sokhung,
-        somay: this.state.somay,
-        ngaycap: this.state.ngaycap,
-        noicap: this.state.noicap,
-      });
-      alert('Xác nhận thành công!');
-    }
-  };
   _getDSViPham = value => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
@@ -85,8 +54,11 @@ export default class VehicleNoti extends Component {
       this.setState({danhsachvipham: filtered});
     });
   };
-  _notidetail(value) {
-    alert(value.mabienban);
+  _sai() {
+    this.setState({visible: false});
+  }
+  _dung() {
+    this.setState({visible: false});
   }
   render() {
     return (
@@ -102,6 +74,7 @@ export default class VehicleNoti extends Component {
             <View
               style={{
                 padding: 3,
+                paddingBottom: 60,
               }}>
               {this.state.danhsachvipham.map((item, index) => (
                 <TouchableOpacity
@@ -172,8 +145,18 @@ export default class VehicleNoti extends Component {
                   }}
                   footer={
                     <DialogFooter>
-                      <DialogButton text="Sai" onPress={() => {}} />
-                      <DialogButton text="Đúng" onPress={() => {}} />
+                      <DialogButton
+                        text="Sai"
+                        onPress={() => {
+                          this._sai();
+                        }}
+                      />
+                      <DialogButton
+                        text="Đúng"
+                        onPress={() => {
+                          this._dung();
+                        }}
+                      />
                     </DialogFooter>
                   }
                   dialogAnimation={
@@ -245,7 +228,7 @@ export default class VehicleNoti extends Component {
                           fontSize: 12,
                           fontWeight: 'bold',
                           marginTop: 30,
-                          color: 'red'
+                          color: 'red',
                         }}>
                         {'Xác nhận những lỗi trên là?'}
                       </Text>

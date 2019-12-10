@@ -19,15 +19,15 @@ export default class History extends Component {
     danhsachvipham: [],
   };
   componentDidMount() {
-    this._getDSViPham("anh");
+    this._getDSViPham('anh');
   }
-  filterData = (value) => {
+  filterData = value => {
     let filtered = Object.values(this.state.danhsachvipham).filter(item =>
       item.nguoilap.toLowerCase().includes(value.toLowerCase()),
     );
     this.setState({filtered});
   };
-  _getDSViPham = (value) => {
+  _getDSViPham = value => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
       let danhsachvipham = [];
@@ -35,6 +35,7 @@ export default class History extends Component {
         var childData = childSnapshot.val();
         danhsachvipham.push(childData);
       });
+      console.log(danhsachvipham);
       let filtered = Object.values(danhsachvipham).filter(item =>
         item.nguoilap.toLowerCase().includes(value.toLowerCase()),
       );
@@ -96,7 +97,12 @@ export default class History extends Component {
                   </Text>
                   <View style={{flexDirection: 'row'}}>
                     <Text>{'Xác nhận: '}</Text>
-                    <Text numberOfLines={1} style={{color: item.trangthai === "Chưa đúng lỗi" ? "red": "green" }}>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        color:
+                          item.trangthai === 'Chưa đúng lỗi' ? 'red' : 'green',
+                      }}>
                       {item.trangthai}
                     </Text>
                   </View>

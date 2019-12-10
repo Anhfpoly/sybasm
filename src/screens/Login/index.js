@@ -23,7 +23,7 @@ export default class Login extends Component {
     phone: '+84949121291',
     otp: '',
     visible: false,
-    isphone: true,
+    isphone: false,
     isnext: false,
     user: null,
     logged: false
@@ -79,12 +79,6 @@ export default class Login extends Component {
   }
   _gotoMain() {
     let result = this.confirmCode();
-    // if (result) {
-    //   this.setState({ logged: true, user: user.toJSON() }, () => this.props.navigation.navigate('VehicleOwner'));
-    // }
-    //  else if (this.state.otp === 'Cs') {
-    //   this.props.navigation.navigate('Police');
-    // }
   }
 
   render() {
