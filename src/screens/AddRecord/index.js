@@ -33,13 +33,49 @@ export default class AddRecord extends Component {
     filtered: [],
     danhsachxe: [],
     filterxe: [],
+    dscs: [],
+    phonenum: '',
+    capbac: '',
+    donvi: '',
+    phonecs: '',
   };
   componentDidMount() {
     this._getDSXe();
+    this._getDSCS(this.state.phonenum);
     this.getNgayGio();
     this.getLocation();
     this._getMaBienBan();
   }
+  _getDSCS = value => {
+    const ref = database().ref('polices');
+    ref.on('value', snapshot => {
+      let dscs = [];
+      snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
+        var childData = childSnapshot.val();
+        dscs.push({id: key, ...childData});
+      });
+      let filtered = dscs.filter(item =>
+        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
+      );
+      console.log(filtered);
+      this.setState({
+        dscs: filtered,
+        nguoilap: filtered[0].hoten,
+        capbac: filtered[0].capbac,
+        phonecs: filtered[0].dienthoai,
+        donvi: filtered[0].donvi,
+      });
+    });
+  };
+  _getUserName = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        this.setState({phonenum: value});
+      }
+    } catch (error) {}
+  };
   filterData = () => {
     let filtered = LOIVIPHAM.filter(item =>
       item.loi.toLowerCase().includes(this.state.loivipham.toLowerCase()),
@@ -192,6 +228,9 @@ export default class AddRecord extends Component {
         nguoilap: this.state.nguoilap,
         ghichu: this.state.ghichu,
         trangthai: this.state.trangthai,
+        phonecs: this.state.phonecs,
+        donvi: this.state.donvi,
+        capbac: this.state.capbac,
       });
       alert('Lập hồ sơ vi phạm thành công!');
       this._setIndexRecord();
@@ -202,13 +241,12 @@ export default class AddRecord extends Component {
         loivipham: '',
         tienphat: '',
         bienso: '',
-        nguoilap: '',
         ghichu: '',
         trangthai: '',
       });
     }
   };
-  
+
   getNgayGio = () => {
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
@@ -506,6 +544,7 @@ export default class AddRecord extends Component {
               iconSize={20}
               iconWidth={40}
               inputPadding={16}
+              value={this.state.nguoilap}
               onChangeText={text => {
                 this.setState({nguoilap: text});
               }}

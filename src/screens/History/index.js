@@ -37,6 +37,8 @@ export default class History extends Component {
     trangthai: 'Chưa xác nhận',
     vitri: '',
     itemId: '',
+    capbac: '',
+    donvi: '',
   };
   componentDidMount() {
     this._getUserName();
@@ -51,7 +53,7 @@ export default class History extends Component {
   };
   filterData = value => {
     let filtered = Object.values(this.state.danhsachvipham).filter(item =>
-      item.nguoilap.toLowerCase().includes(value.toLowerCase()),
+      item.phonecs.toLowerCase().includes(value.toLowerCase()),
     );
     this.setState({filtered});
   };
@@ -65,7 +67,7 @@ export default class History extends Component {
         danhsachvipham.push({id: key, ...childData});
       });
       let filtered = danhsachvipham.filter(item =>
-        item.nguoilap.toLowerCase().includes(value.toLowerCase()),
+        item.phonecs.toLowerCase().includes(value.toLowerCase()),
       );
       // console.log(filtered)
       this.setState({danhsachvipham: filtered});
@@ -112,6 +114,8 @@ export default class History extends Component {
                       trangthai: item.trangthai,
                       vitri: item.vitri,
                       itemId: item.id,
+                      capbac: item.capbac,
+                      donvi: item.donvi
                     });
                   }}>
                   <Text
@@ -156,7 +160,6 @@ export default class History extends Component {
               onTouchOutside={() => {
                 this.setState({visible: false});
               }}
-              
               dialogAnimation={
                 new ScaleAnimation({
                   slideFrom: 'bottom',
@@ -194,7 +197,11 @@ export default class History extends Component {
                   </Text>
                   <Text style={{fontSize: 12}}>
                     {'Cấp bậc, chức vụ: '}
-                    {this.state.chucvu}
+                    {this.state.capbac}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Đơn vị: '}
+                    {this.state.donvi}
                   </Text>
                   <Text style={{fontSize: 12}}>
                     Tiến hành lập biên bản vi phạm hành chính với:

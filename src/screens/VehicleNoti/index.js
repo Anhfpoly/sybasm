@@ -38,6 +38,9 @@ export default class VehicleNoti extends Component {
     trangthai: 'Chưa xác nhận',
     vitri: '',
     itemId: '',
+    capbac: '',
+    donvi: '',
+    phonecs: '',
   };
   componentDidMount() {
     this._getUserName();
@@ -64,6 +67,9 @@ export default class VehicleNoti extends Component {
       nguoilap: this.state.nguoilap,
       ghichu: this.state.ghichu,
       trangthai: status,
+      capbac: this.state.capbac,
+      donvi: this.state.donvi,
+      phonecs: this.state.phonecs,
     });
   };
   _getDSViPham = value => {
@@ -134,6 +140,9 @@ export default class VehicleNoti extends Component {
                       trangthai: item.trangthai,
                       vitri: item.vitri,
                       itemId: item.id,
+                      capbac: item.capbac,
+                      donvi: item.donvi,
+                      phonecs: item.phonecs,
                     });
                   }}>
                   <Text
@@ -240,13 +249,17 @@ export default class VehicleNoti extends Component {
                         Tại: {this.state.vitri}
                       </Text>
                       <Text style={{fontSize: 12}}>
-                        {'Chúng tôi gồm: '}
-                        {this.state.nguoilap}
-                      </Text>
-                      <Text style={{fontSize: 12}}>
-                        {'Cấp bậc, chức vụ: '}
-                        {this.state.chucvu}
-                      </Text>
+                    {'Chúng tôi gồm: '}
+                    {this.state.nguoilap}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Cấp bậc, chức vụ: '}
+                    {this.state.capbac}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Đơn vị: '}
+                    {this.state.donvi}
+                  </Text>
                       <Text style={{fontSize: 12}}>
                         Tiến hành lập biên bản vi phạm hành chính với:
                       </Text>
