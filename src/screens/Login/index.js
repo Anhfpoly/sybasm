@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
 import Dialog, {
   DialogFooter,
@@ -19,6 +19,8 @@ import Dialog, {
 } from 'react-native-popup-dialog';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
+
 export default class Login extends Component {
   state = {
     phone: '+84',
@@ -28,29 +30,74 @@ export default class Login extends Component {
     isnext: false,
     user: null,
     logged: false,
+    dsuser: [],
   };
   componentDidMount() {
-    this._checkLogin();
+    this._getUserName();
+    // this._checkLogin();
   }
-  _saveStorage = async (value) => {
+  _saveStorage = async value => {
     try {
       await AsyncStorage.setItem('username', value);
     } catch (error) {
       // Error saving data
     }
   };
-  _checkLogin = () => {
-    this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        // console.log(user.toJSON());
-        this.setState({user: user.toJSON(), logged: true}, () =>
-          this.props.navigation.navigate('Police'),
-        );
-      } else {
-        console.log('Đăng nhập thất bại');
+  _getUserName = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        this.setState({phonenum: value});
+        this._getDSUser(value);
       }
+    } catch (error) {}
+  };
+  _getDSUser = value => {
+    const ref = database().ref('users');
+    ref.on('value', snapshot => {
+      let dsuser = [];
+      snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
+        var childData = childSnapshot.val();
+        dsuser.push({id: key, ...childData});
+      });
+      let filtered = dsuser.filter(item =>
+        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
+      );
+      console.log(filtered);
+      let loaitk = filtered[0].loaitk;
+      console.log(loaitk);
+      this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          // console.log(user.toJSON());
+          if (loaitk === 'cs') {
+            this.setState({user: user.toJSON(), logged: true}, () =>
+              this.props.navigation.navigate('Police'),
+            );
+          }
+          if (loaitk === 'cx') {
+            this.setState({user: user.toJSON(), logged: true}, () =>
+              this.props.navigation.navigate('VehicleOwner'),
+            );
+          }
+        } else {
+          console.log('Đăng nhập thất bại');
+        }
+      });
     });
   };
+  // _checkLogin = () => {
+  //   this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
+  //     if (user) {
+  //       // console.log(user.toJSON());
+  //       this.setState({user: user.toJSON(), logged: true}, () =>
+  //         this.props.navigation.navigate('Police'),
+  //       );
+  //     } else {
+  //       console.log('Đăng nhập thất bại');
+  //     }
+  //   });
+  // };
   _phoneAuth = async () => {
     try {
       const confirmResult = await auth().signInWithPhoneNumber(
@@ -92,6 +139,7 @@ export default class Login extends Component {
       this._phoneAuth();
     }
     this.setState({visible: false});
+    this._getDSUser(this.state.phone);
     let timer = setTimeout(() => {
       this.setState({isnext: !this.state.isnext});
     }, 300);

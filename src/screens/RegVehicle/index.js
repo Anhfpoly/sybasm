@@ -40,7 +40,7 @@ export default class RegVehicle extends Component {
     ngayvao: '',
     capbac: '',
     donvi: '',
-    loaitk: 'cx'
+    loaitk: 'cx',
   };
   componentDidMount() {
     this._getSoGiayPhep();
@@ -122,6 +122,7 @@ export default class RegVehicle extends Component {
         noicap: this.state.noicap,
         loaitk: 'cx',
       });
+      this._setUsers(this.state.chuxe, this.state.dienthoai, 'cx');
       this.setState({
         chuxe: '',
         dienthoai: '',
@@ -135,7 +136,7 @@ export default class RegVehicle extends Component {
         ngaycap: '',
         noicap: '',
         loaitk: '',
-        ghichu: ''
+        ghichu: '',
       });
       this._setIndexNumber();
       alert('Đăng ký thành công!');
@@ -162,8 +163,9 @@ export default class RegVehicle extends Component {
         capbac: this.state.capbac,
         donvi: this.state.donvi,
         dienthoai: this.state.dienthoai,
-        loaitk: 'cs'
+        loaitk: 'cs',
       });
+      this._setUsers(this.state.hoten, this.state.dienthoai, 'cs');
       this.setState({
         macs: '',
         hoten: '',
@@ -172,7 +174,7 @@ export default class RegVehicle extends Component {
         capbac: '',
         donvi: '',
         dienthoai: '',
-        loaitk: ''
+        loaitk: '',
       });
       this._setIndexPolice();
       alert('Đăng ký thành công!');
@@ -200,6 +202,14 @@ export default class RegVehicle extends Component {
   _regPA() {
     this._setPA();
   }
+  _setUsers = async (ten, dt, loaitk) => {
+    const ref = database().ref('users');
+    ref.push({
+      hoten: ten,
+      dienthoai: dt,
+      loaitk: loaitk,
+    });
+  };
   render() {
     return (
       <SafeAreaView>
@@ -652,7 +662,7 @@ export default class RegVehicle extends Component {
                   borderColor: '#4285f4',
                   borderWidth: 1,
                   borderRadius: 12,
-                  marginBottom: 3,
+                  marginBottom: 12,
                 }}>
                 <Fumi
                   label={'Điện Thoại'}

@@ -62,7 +62,7 @@ export default class Police extends Component {
       let filtered = dscs.filter(item =>
         item.dienthoai.toLowerCase().includes(value.toLowerCase()),
       );
-      console.log(filtered);
+      // console.log(filtered);
       this.setState({
         dscs: filtered,
         hoten: filtered[0].hoten,
