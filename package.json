@@ -18,6 +18,7 @@
     "fulllib": "npm i -save react-native-gesture-handler react-native-paper react-native-reanimated react-native-vector-icons react-navigation react-navigation-material-bottom-tabs react-navigation-stack react-navigation-tabs"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^2.0.0-rc.0",
     "@react-native-firebase/app": "^6.0.3",
     "@react-native-firebase/auth": "^6.0.3",
     "@react-native-firebase/database": "^6.0.3",

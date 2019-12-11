@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Platform,
+  Platform
 } from 'react-native';
 import Dialog, {
   DialogFooter,
@@ -18,6 +18,7 @@ import Dialog, {
 } from 'react-native-popup-dialog';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-community/async-storage';
 export default class Login extends Component {
   state = {
     phone: '+84949121291',
@@ -31,6 +32,14 @@ export default class Login extends Component {
   componentDidMount() {
     this._checkLogin();
   }
+  _saveStorage = async data => {
+    try {
+      await AsyncStorage.setItem('username', data);
+      alert(data);
+    } catch (error) {
+      // Error saving data
+    }
+  };
   _checkLogin = () => {
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -104,7 +113,7 @@ export default class Login extends Component {
             </Text>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: 'bold',
                 color: '#4285f4',
                 paddingHorizontal: 60,
@@ -150,7 +159,7 @@ export default class Login extends Component {
             </Text>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: 'bold',
                 color: '#4285f4',
                 paddingHorizontal: 60,

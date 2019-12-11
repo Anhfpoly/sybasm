@@ -12,15 +12,37 @@ import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from 'react-native-textinput-effects';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class History extends Component {
   static navigationOptions = {header: null};
   state = {
     danhsachvipham: [],
+    userName: 'abcada',
   };
   componentDidMount() {
-    this._getDSViPham('em');
+    this._saveStorage("TEO");
+    this._getUserName();
   }
+  _saveStorage = async data => {
+    try {
+      await AsyncStorage.setItem('username', data);
+      alert(data);
+    } catch (error) {
+      // Error saving data
+    }
+  };
+  _getUserName = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        this.setState({userName: value});
+        alert(this.state.userName);
+        this._getDSViPham(this.state.userName);
+      }
+    } catch (error) {}
+    alert(this.state.userName);
+  };
   filterData = value => {
     let filtered = Object.values(this.state.danhsachvipham).filter(item =>
       item.nguoilap.toLowerCase().includes(value.toLowerCase()),
