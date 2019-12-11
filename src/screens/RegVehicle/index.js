@@ -43,9 +43,20 @@ export default class RegVehicle extends Component {
     loaitk: 'cx',
   };
   componentDidMount() {
-    this._getSoGiayPhep();
-    this._getMaCS();
+    this.unsubcribleFocus = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        this.setState({visible: true});
+        this._getSoGiayPhep();
+        this._getMaCS();
+      },
+    );
   }
+
+  componentWillUnmount() {
+    this.unsubcribleFocus;
+  }
+
   _getSoGiayPhep = async () => {
     const ref = database().ref('inumber');
     ref.on('value', snapshot => {

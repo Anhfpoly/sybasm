@@ -40,11 +40,20 @@ export default class AddRecord extends Component {
     phonecs: '',
   };
   componentDidMount() {
-    this._getDSXe();
-    this._getDSCS(this.state.phonenum);
-    this.getNgayGio();
-    this.getLocation();
-    this._getMaBienBan();
+    this.unsubcribleFocus = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        this._getDSXe();
+        this._getDSCS(this.state.phonenum);
+        this.getNgayGio();
+        this.getLocation();
+        this._getMaBienBan();
+      },
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubcribleFocus;
   }
   _getDSCS = value => {
     const ref = database().ref('polices');
