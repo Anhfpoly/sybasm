@@ -38,13 +38,13 @@ export default class Profile extends Component {
   };
   componentDidMount() {
     this._getUserName();
-    this._getDSChuXe(this.state.phonenum);
   }
   _getUserName = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
         this.setState({phonenum: value});
+        this._getDSChuXe(value);
       }
     } catch (error) {}
   };
