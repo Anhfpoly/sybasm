@@ -201,15 +201,14 @@ export default class AddRecord extends Component {
         dienthoai: '',
         loivipham: '',
         tienphat: '',
-        ngaygio: '',
         bienso: '',
-        vitri: '',
         nguoilap: '',
         ghichu: '',
         trangthai: '',
       });
     }
   };
+  
   getNgayGio = () => {
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;

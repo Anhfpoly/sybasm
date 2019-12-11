@@ -8,11 +8,13 @@ import {
   Image,
   Platform,
   ScrollView,
+  AsyncStorage,
 } from 'react-native';
 import {TextInput, Header} from '../../components';
 import firebase from '@react-native-firebase/app';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
+import database from '@react-native-firebase/database';
 import Dialog, {
   DialogFooter,
   DialogButton,
@@ -24,10 +26,56 @@ export default class Profile extends Component {
   static navigationOptions = {header: null};
   state = {
     visible: false,
+    danhsachchuxe: [],
+    phonenum: '',
+    chuxe: '',
+    diachi: '',
+    sogiay: '',
+    dienthoai: '',
+    loaiphuongtien: '',
+    bienso: '',
+    loaixe: '',
+  };
+  componentDidMount() {
+    this._getUserName();
+    this._getDSChuXe(this.state.phonenum);
+  }
+  _getUserName = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        this.setState({phonenum: value});
+      }
+    } catch (error) {}
   };
   signOut = async () => {
     await firebase.auth().signOut();
     this.props.navigation.navigate('Login');
+  };
+  _getDSChuXe = value => {
+    const ref = database().ref('vehicles');
+    ref.on('value', snapshot => {
+      let danhsachchuxe = [];
+      snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
+        var childData = childSnapshot.val();
+        danhsachchuxe.push({id: key, ...childData});
+      });
+      let filtered = danhsachchuxe.filter(item =>
+        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
+      );
+      console.log(filtered);
+      this.setState({
+        danhsachchuxe: filtered,
+        chuxe: filtered[0].chuxe,
+        diachi: filtered[0].diachi,
+        sogiay: filtered[0].sogiay,
+        dienthoai: filtered[0].dienthoai,
+        loaiphuongtien: filtered[0].loaiphuongtien,
+        bienso: filtered[0].bienso,
+        loaixe: filtered[0].loaixe,
+      });
+    });
   };
   render() {
     return (
@@ -37,7 +85,7 @@ export default class Profile extends Component {
             style={styles.avatar}
             source={require('../../assets/images/driver.png')}
           />
-          <Text style={styles.name}>Nguyễn Cao Hoàng Triều</Text>
+          <Text style={styles.name}>{this.state.chuxe}</Text>
         </View>
         <View style={styles.infoContainer}>
           <Text
@@ -53,7 +101,7 @@ export default class Profile extends Component {
             <Text style={styles.infoTitle}>Địa chỉ</Text>
             <View style={{flexDirection: 'row', paddingLeft: 10}}>
               <Entypo name={'address'} size={18} color="#4285f4" />
-              <Text style={styles.infoDetail}>TP.HCM</Text>
+              <Text style={styles.infoDetail}>{this.state.diachi}</Text>
             </View>
           </View>
           <View style={styles.infoRow}>
@@ -64,14 +112,14 @@ export default class Profile extends Component {
                 size={18}
                 color="#4285f4"
               />
-              <Text style={styles.infoDetail}>ABC-XYZ</Text>
+              <Text style={styles.infoDetail}>{this.state.sogiay}</Text>
             </View>
           </View>
           <View style={(styles.infoRow, {borderBottomColor: 'white'})}>
             <Text style={styles.infoTitle}>Số điện thoại</Text>
             <View style={{flexDirection: 'row', paddingLeft: 10}}>
               <FontAwesome name={'phone'} size={18} color="#4285f4" />
-              <Text style={styles.infoDetail}>0909123456</Text>
+              <Text style={styles.infoDetail}>{this.state.dienthoai}</Text>
             </View>
           </View>
         </View>
@@ -89,21 +137,21 @@ export default class Profile extends Component {
             <Text style={styles.infoTitle}>Loại phương tiện</Text>
             <View style={{flexDirection: 'row', paddingLeft: 10}}>
               <FontAwesome name={'car'} size={18} color="#4285f4" />
-              <Text style={styles.infoDetail}>Xe 2 bánh</Text>
+              <Text style={styles.infoDetail}>{this.state.loaiphuongtien}</Text>
             </View>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoTitle}>Biển số</Text>
             <View style={{flexDirection: 'row', paddingLeft: 10}}>
               <FontAwesome name={'drivers-license'} size={18} color="#4285f4" />
-              <Text style={styles.infoDetail}>ABC-XYZ</Text>
+              <Text style={styles.infoDetail}>{this.state.bienso}</Text>
             </View>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoTitle}>Loại xe</Text>
             <View style={{flexDirection: 'row', paddingLeft: 10}}>
               <FontAwesome name={'cube'} size={18} color="#4285f4" />
-              <Text style={styles.infoDetail}>Honda Airblade</Text>
+              <Text style={styles.infoDetail}>{this.state.loaixe}</Text>
             </View>
           </View>
         </View>
@@ -190,6 +238,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontWeight: 'bold',
     fontSize: 16,
+    color: '#ff4800',
   },
   infoContainer: {
     borderRadius: 7,

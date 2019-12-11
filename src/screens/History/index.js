@@ -13,21 +13,39 @@ import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from 'react-native-textinput-effects';
-// import AsyncStorage from '@react-native-community/async-storage';
+import Dialog, {
+  DialogFooter,
+  DialogButton,
+  ScaleAnimation,
+  DialogContent,
+} from 'react-native-popup-dialog';
 
 export default class History extends Component {
   static navigationOptions = {header: null};
   state = {
     danhsachvipham: [],
+    visible: false,
+    mabienban: '',
+    bienso: '',
+    dienthoai: '',
+    ghichu: '',
+    loivipham: '',
+    ngaygio: '',
+    nguoilap: '',
+    nguoivipham: '',
+    tienphat: '',
+    trangthai: 'Chưa xác nhận',
+    vitri: '',
+    itemId: '',
   };
   componentDidMount() {
-    this._getDSViPham('em');
+    this._getUserName();
   }
   _getUserName = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
-        console.log(value);
+        this._getDSViPham(value);
       }
     } catch (error) {}
   };
@@ -42,13 +60,14 @@ export default class History extends Component {
     ref.on('value', snapshot => {
       let danhsachvipham = [];
       snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
         var childData = childSnapshot.val();
-        danhsachvipham.push(childData);
+        danhsachvipham.push({id: key, ...childData});
       });
-      // console.log(danhsachvipham);
-      let filtered = Object.values(danhsachvipham).filter(item =>
+      let filtered = danhsachvipham.filter(item =>
         item.nguoilap.toLowerCase().includes(value.toLowerCase()),
       );
+      // console.log(filtered)
       this.setState({danhsachvipham: filtered});
     });
   };
@@ -80,7 +99,19 @@ export default class History extends Component {
                   key={index}
                   onPress={() => {
                     this.setState({
+                      visible: true,
+                      mabienban: item.mabienban,
                       bienso: item.bienso,
+                      dienthoai: item.dienthoai,
+                      ghichu: item.ghichu,
+                      loivipham: item.loivipham,
+                      ngaygio: item.ngaygio,
+                      nguoilap: item.nguoilap,
+                      nguoivipham: item.nguoivipham,
+                      tienphat: item.tienphat,
+                      trangthai: item.trangthai,
+                      vitri: item.vitri,
+                      itemId: item.id,
                     });
                   }}>
                   <Text
@@ -110,8 +141,7 @@ export default class History extends Component {
                     <Text
                       numberOfLines={1}
                       style={{
-                        color:
-                          item.trangthai === 'Chưa đúng lỗi' ? 'red' : 'green',
+                        color: item.trangthai === 'Sai lỗi' ? 'red' : 'green',
                       }}>
                       {item.trangthai}
                     </Text>
@@ -120,6 +150,75 @@ export default class History extends Component {
               ))}
             </View>
           )}
+          <View>
+            <Dialog
+              visible={this.state.visible}
+              onTouchOutside={() => {
+                this.setState({visible: false});
+              }}
+              
+              dialogAnimation={
+                new ScaleAnimation({
+                  slideFrom: 'bottom',
+                })
+              }>
+              <DialogContent>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={{marginTop: 10, fontWeight: 'bold'}}>
+                    CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                  </Text>
+                  <Text style={{fontWeight: 'bold'}}>
+                    Độc lập - Tự Do - Hạnh Phúc
+                  </Text>
+                  <Text style={{marginTop: 6}}>{'******'}</Text>
+                  <Text style={{fontSize: 12, fontWeight: 'bold'}}>
+                    BIÊN BẢN VI PHẠM HÀNH CHÍNH
+                  </Text>
+                  <Text style={{fontSize: 12, fontWeight: 'bold'}}>
+                    Về lĩnh vực giao thông đường bộ
+                  </Text>
+                </View>
+                <View style={{marginTop: 10}}>
+                  <Text style={{fontSize: 12, color: '#ff4800'}}>
+                    {'Mã biên bản: '}
+                    {this.state.mabienban}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    Căn cứ: luật xử lý vi phạm hành chính
+                  </Text>
+                  <Text style={{fontSize: 12}}>Ngày: {this.state.ngaygio}</Text>
+                  <Text style={{fontSize: 12}}>Tại: {this.state.vitri}</Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Chúng tôi gồm: '}
+                    {this.state.nguoilap}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Cấp bậc, chức vụ: '}
+                    {this.state.chucvu}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    Tiến hành lập biên bản vi phạm hành chính với:
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Ông(Bà)/Tổ chức: '}
+                    {this.state.nguoivipham}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Điện thoại: '}
+                    {this.state.dienthoai}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Nội dung vi phạm: \n'}
+                    {this.state.loivipham}
+                  </Text>
+                  <Text style={{fontSize: 12}}>
+                    {'Số tiền nộp phạt: \n'}
+                    {this.state.tienphat}
+                  </Text>
+                </View>
+              </DialogContent>
+            </Dialog>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );

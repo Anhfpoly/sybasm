@@ -33,14 +33,13 @@ export default class RegVehicle extends Component {
     noicap: '',
     loaiphuongtien: '',
     visible: true,
-    isReg: 'true',
+    isReg: true,
     macs: '',
     hoten: '',
     ngaysinh: '',
     ngayvao: '',
     capbac: '',
     donvi: '',
-    phone: '',
     loaitk: 'cx'
   };
   componentDidMount() {
@@ -151,7 +150,7 @@ export default class RegVehicle extends Component {
       this.state.ngayvao === '' ||
       this.state.capbac === '' ||
       this.state.donvi === '' ||
-      this.state.phone === ''
+      this.state.dienthoai === ''
     ) {
       alert('Vui lòng nhập đủ thông tin!');
     } else {
@@ -162,7 +161,7 @@ export default class RegVehicle extends Component {
         ngayvao: this.state.ngayvao,
         capbac: this.state.capbac,
         donvi: this.state.donvi,
-        phone: this.state.phone,
+        dienthoai: this.state.dienthoai,
         loaitk: 'cs'
       });
       this.setState({
@@ -172,7 +171,7 @@ export default class RegVehicle extends Component {
         ngayvao: '',
         capbac: '',
         donvi: '',
-        phone: '',
+        dienthoai: '',
         loaitk: ''
       });
       this._setIndexPolice();
@@ -664,7 +663,7 @@ export default class RegVehicle extends Component {
                   iconWidth={40}
                   inputPadding={16}
                   onChangeText={text => {
-                    this.setState({phone: text});
+                    this.setState({dienthoai: text});
                   }}
                 />
               </View>

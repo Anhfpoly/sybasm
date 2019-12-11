@@ -8,7 +8,7 @@ import {
   Platform,
   PermissionsAndroid,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
 import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
@@ -38,19 +38,15 @@ export default class VehicleNoti extends Component {
     trangthai: 'Chưa xác nhận',
     vitri: '',
     itemId: '',
-    phonenum: '',
   };
   componentDidMount() {
     this._getUserName();
-    this._getDSViPham(this.state.phonenum);
   }
   _getUserName = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
-        console.log(value);
-        this.setState({phonenum: value});
-        console.log(this.state.phonenum);
+        this._getDSViPham(value);
       }
     } catch (error) {}
   };
@@ -82,7 +78,7 @@ export default class VehicleNoti extends Component {
       let filtered = danhsachvipham.filter(item =>
         item.dienthoai.toLowerCase().includes(value.toLowerCase()),
       );
-      // console.log(filtered)
+      console.log(filtered);
       this.setState({danhsachvipham: filtered});
     });
   };
@@ -243,12 +239,14 @@ export default class VehicleNoti extends Component {
                       <Text style={{fontSize: 12}}>
                         Tại: {this.state.vitri}
                       </Text>
-                      <Text style={{fontSize: 12}}>Chúng tôi gồm:</Text>
                       <Text style={{fontSize: 12}}>
-                        {'1. Lê Văn '}
+                        {'Chúng tôi gồm: '}
                         {this.state.nguoilap}
                       </Text>
-                      <Text style={{fontSize: 12}}>Cấp bậc, chức vụ:</Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Cấp bậc, chức vụ: '}
+                        {this.state.chucvu}
+                      </Text>
                       <Text style={{fontSize: 12}}>
                         Tiến hành lập biên bản vi phạm hành chính với:
                       </Text>
