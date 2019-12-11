@@ -158,6 +158,7 @@ export default class AddRecord extends Component {
       .ref('irecord')
       .set(i);
   };
+
   _getData = async () => {
     const ref = database().ref('vehicles');
     const snapshot = await ref.once('value');

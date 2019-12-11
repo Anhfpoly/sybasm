@@ -21,7 +21,7 @@ import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 export default class Login extends Component {
   state = {
-    phone: '+84949121291',
+    phone: '+84',
     otp: '',
     visible: false,
     isphone: false,
@@ -44,7 +44,7 @@ export default class Login extends Component {
       if (user) {
         // console.log(user.toJSON());
         this.setState({user: user.toJSON(), logged: true}, () =>
-          this.props.navigation.navigate('VehicleOwner'),
+          this.props.navigation.navigate('Police'),
         );
       } else {
         console.log('Đăng nhập thất bại');
