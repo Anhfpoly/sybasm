@@ -28,7 +28,7 @@ export default class AddRecord extends Component {
     vitri: '',
     nguoilap: '',
     ghichu: '',
-    trangthai: 'Chưa đúng lỗi',
+    trangthai: 'Chưa xác nhận',
     danhsachloi: LOIVIPHAM,
     filtered: [],
     danhsachxe: [],

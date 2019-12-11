@@ -24,15 +24,11 @@ export default class RegVehicle extends Component {
     somay: '',
     ngaycap: '',
     noicap: '',
+    loaiphuongtien: ''
   };
   componentDidMount() {
     // this._getData();
   }
-  _getData = async () => {
-    const ref = database().ref('vehicles/000001');
-    const snapshot = await ref.once('value');
-    alert(snapshot.val());
-  };
   _setData = async () => {
     const ref = database().ref('vehicles');
     if (
@@ -40,6 +36,7 @@ export default class RegVehicle extends Component {
       this.state.dienthoai === '' ||
       this.state.diachi === '' ||
       this.state.loaixe === '' ||
+      this.state.loaiphuongtien === '' ||
       this.state.mauxe === '' ||
       this.state.bienso === '' ||
       this.state.sokhung === '' ||
@@ -54,6 +51,7 @@ export default class RegVehicle extends Component {
         dienthoai: this.state.dienthoai,
         diachi: this.state.diachi,
         loaixe: this.state.loaixe,
+        loaiphuongtien: this.state.loaiphuongtien,
         mauxe: this.state.mauxe,
         bienso: this.state.bienso,
         sokhung: this.state.sokhung,
@@ -66,6 +64,7 @@ export default class RegVehicle extends Component {
         dienthoai: "",
         diachi: "",
         loaixe: "",
+        loaiphuongtien: "",
         mauxe: "",
         bienso: "",
         sokhung: "",
@@ -165,6 +164,26 @@ export default class RegVehicle extends Component {
               inputPadding={16}
               onChangeText={text => {
                 this.setState({loaixe: text});
+              }}
+            />
+          </View>
+          <View
+            style={{
+              borderColor: '#4285f4',
+              borderWidth: 1,
+              borderRadius: 12,
+              marginBottom: 3,
+            }}>
+            <Fumi
+              label={'Loại Phương Tiện'}
+              iconClass={FontAwesomeIcon}
+              iconName={'university'}
+              iconColor={'#4285f4'}
+              iconSize={20}
+              iconWidth={40}
+              inputPadding={16}
+              onChangeText={text => {
+                this.setState({loaiphuongtien: text});
               }}
             />
           </View>

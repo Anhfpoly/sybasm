@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Platform
+  Platform,
+  AsyncStorage
 } from 'react-native';
 import Dialog, {
   DialogFooter,
@@ -18,7 +19,6 @@ import Dialog, {
 } from 'react-native-popup-dialog';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-community/async-storage';
 export default class Login extends Component {
   state = {
     phone: '+84949121291',
@@ -32,10 +32,9 @@ export default class Login extends Component {
   componentDidMount() {
     this._checkLogin();
   }
-  _saveStorage = async data => {
+  _saveStorage = async (value) => {
     try {
-      await AsyncStorage.setItem('username', data);
-      alert(data);
+      await AsyncStorage.setItem('username', value);
     } catch (error) {
       // Error saving data
     }
@@ -43,9 +42,9 @@ export default class Login extends Component {
   _checkLogin = () => {
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user.toJSON());
+        // console.log(user.toJSON());
         this.setState({user: user.toJSON(), logged: true}, () =>
-          this.props.navigation.navigate('Police'),
+          this.props.navigation.navigate('VehicleOwner'),
         );
       } else {
         console.log('Đăng nhập thất bại');
@@ -83,6 +82,7 @@ export default class Login extends Component {
   }
   _login() {
     this.setState({visible: true});
+    this._saveStorage(this.state.phone);
   }
   _khong() {
     this.setState({visible: false});

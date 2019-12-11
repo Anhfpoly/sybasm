@@ -8,6 +8,7 @@ import {
   Platform,
   PermissionsAndroid,
   StyleSheet,
+  AsyncStorage
 } from 'react-native';
 import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
@@ -37,10 +38,22 @@ export default class VehicleNoti extends Component {
     trangthai: 'Chưa xác nhận',
     vitri: '',
     itemId: '',
+    phonenum: '',
   };
   componentDidMount() {
-    this._getDSViPham('61D');
+    this._getUserName();
+    this._getDSViPham(this.state.phonenum);
   }
+  _getUserName = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log(value);
+        this.setState({phonenum: value});
+        console.log(this.state.phonenum);
+      }
+    } catch (error) {}
+  };
   _updateData = async status => {
     const ref = database().ref('records/' + this.state.itemId);
     ref.set({
@@ -67,7 +80,7 @@ export default class VehicleNoti extends Component {
         danhsachvipham.push({id: key, ...childData});
       });
       let filtered = danhsachvipham.filter(item =>
-        item.bienso.toLowerCase().includes(value.toLowerCase()),
+        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
       );
       // console.log(filtered)
       this.setState({danhsachvipham: filtered});

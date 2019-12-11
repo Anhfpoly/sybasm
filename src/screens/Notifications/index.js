@@ -35,7 +35,7 @@ export default class Notifications extends Component {
         var childData = childSnapshot.val();
         danhsachvipham.push(childData);
       });
-      console.log(danhsachvipham);
+      // console.log(danhsachvipham);
       let filtered = Object.values(danhsachvipham).filter(item =>
         item.nguoilap.toLowerCase().includes(value.toLowerCase()),
       );
