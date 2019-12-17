@@ -13,6 +13,7 @@ import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from 'react-native-textinput-effects';
 import Geolocation from 'react-native-geolocation-service';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {LOIVIPHAM} from '../../data/loi';
 export default class AddRecord extends Component {
   static navigationOptions = {header: null};
@@ -38,6 +39,7 @@ export default class AddRecord extends Component {
     capbac: '',
     donvi: '',
     phonecs: '',
+    loaiphuongtien: ''
   };
   componentDidMount() {
     this.unsubcribleFocus = this.props.navigation.addListener(
@@ -240,6 +242,7 @@ export default class AddRecord extends Component {
         phonecs: this.state.phonecs,
         donvi: this.state.donvi,
         capbac: this.state.capbac,
+        loaiphuongtien: this.state.loaiphuongtien,
       });
       alert('Lập hồ sơ vi phạm thành công!');
       this._setIndexRecord();
@@ -333,8 +336,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Xe Vi Phạm'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -362,6 +365,7 @@ export default class AddRecord extends Component {
                       bienso: item.bienso,
                       dienthoai: item.dienthoai,
                       nguoivipham: item.chuxe,
+                      loaiphuongtien: item.loaiphuongtien,
                       filterxe: [],
                     });
                   }}>
@@ -388,8 +392,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Người Vi Phạm'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -409,8 +413,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Điện Thoại'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -430,8 +434,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Lỗi Vi Phạm'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -484,8 +488,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Tiền Phạt'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -505,8 +509,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Ngày Giờ'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -526,8 +530,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Nơi Vi Phạm'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -547,8 +551,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Người Lập Biên Bản'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}
@@ -568,8 +572,8 @@ export default class AddRecord extends Component {
             }}>
             <Fumi
               label={'Ghi Chú'}
-              iconClass={FontAwesomeIcon}
-              iconName={'university'}
+              iconClass={SimpleLineIcons}
+              iconName={'pencil'}
               iconColor={'#4285f4'}
               iconSize={20}
               iconWidth={40}

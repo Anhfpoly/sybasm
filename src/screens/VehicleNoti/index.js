@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from 'react-native-textinput-effects';
 import Dialog, {
   DialogFooter,
@@ -42,6 +42,8 @@ export default class VehicleNoti extends Component {
     capbac: '',
     donvi: '',
     phonecs: '',
+    phigiaodich: '0',
+    loaiphuongtien: '',
   };
   componentDidMount() {
     this._getUserName();
@@ -62,6 +64,7 @@ export default class VehicleNoti extends Component {
     ref.set({
       mabienban: this.state.mabienban,
       nguoivipham: this.state.nguoivipham,
+      loaiphuongtien: this.state.loaiphuongtien,
       dienthoai: this.state.dienthoai,
       loivipham: this.state.loivipham,
       tienphat: this.state.tienphat,
@@ -74,6 +77,7 @@ export default class VehicleNoti extends Component {
       capbac: this.state.capbac,
       donvi: this.state.donvi,
       phonecs: this.state.phonecs,
+      phigiaodich: this.state.phigiaodich,
     });
   };
   _getDSViPham = value => {
@@ -154,6 +158,9 @@ export default class VehicleNoti extends Component {
                       capbac: item.capbac,
                       donvi: item.donvi,
                       phonecs: item.phonecs,
+                      loaiphuongtien: item.loaiphuongtien,
+                      phigiaodich:
+                        item.loaiphuongtien === 'Xe máy' ? 3000 : 6000,
                     });
                   }}>
                   <Text
@@ -198,31 +205,31 @@ export default class VehicleNoti extends Component {
                   }}
                   footer={
                     this.state.trangthai !== 'Đã nộp phạt' && (
-                    <DialogFooter>
-                      {this.state.trangthai === 'Đúng lỗi' ? (
-                        <DialogButton
-                          text="Nộp Phạt"
-                          onPress={() => {
-                            this._nopphat();
-                          }}
-                        />
-                      ) : (
-                        <>
+                      <DialogFooter>
+                        {this.state.trangthai === 'Đúng lỗi' ? (
                           <DialogButton
-                            text="Sai Lỗi"
+                            text="Nộp Phạt"
                             onPress={() => {
-                              this._sai();
+                              this._nopphat();
                             }}
                           />
-                          <DialogButton
-                            text="Đúng Lỗi"
-                            onPress={() => {
-                              this._dung();
-                            }}
-                          />
-                        </>
-                      )}
-                    </DialogFooter>
+                        ) : (
+                          <>
+                            <DialogButton
+                              text="Sai Lỗi"
+                              onPress={() => {
+                                this._sai();
+                              }}
+                            />
+                            <DialogButton
+                              text="Đúng Lỗi"
+                              onPress={() => {
+                                this._dung();
+                              }}
+                            />
+                          </>
+                        )}
+                      </DialogFooter>
                     )
                   }
                   dialogAnimation={
@@ -313,7 +320,7 @@ export default class VehicleNoti extends Component {
                           }}
                         />
                         <DialogButton
-                          text="Thanh Toán"
+                          text="Xác Nhận"
                           onPress={() => {
                             this._thanhtoan();
                           }}
@@ -330,11 +337,48 @@ export default class VehicleNoti extends Component {
                     <View
                       style={{justifyContent: 'center', alignItems: 'center'}}>
                       <Text style={{marginTop: 10, fontWeight: 'bold'}}>
-                        CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                        CHUYỂN TIỀN VỀ KHO BẠC
                       </Text>
-                      <Text style={{fontWeight: 'bold'}}>
-                        Độc lập - Tự Do - Hạnh Phúc
-                      </Text>
+                      <View>
+                        <View style={styles.infoRow}>
+                          <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                            Ngân hàng No&PTNT Chi nhánh Tây Sài Gòn
+                          </Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                          <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                            Số tài khoản
+                          </Text>
+                          <Text style={styles.infoDetail}>
+                            6789 6789 6789 6789
+                          </Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                          <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                            Số tiền
+                          </Text>
+                          <Text style={styles.infoDetail}>
+                            {this._currencyFormat(Number(this.state.tienphat))}
+                          </Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                          <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                            Nội dung
+                          </Text>
+                          <Text style={styles.infoDetail}>
+                            {'Nộp phạt biên bản số '}
+                            {this.state.mabienban}
+                          </Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                          <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                            Phí giao dịch
+                          </Text>
+                          <Text style={styles.infoDetail}>
+                            {this.state.phigiaodich}
+                          </Text>
+                        </View>
+                      </View>
                     </View>
                   </DialogContent>
                 </Dialog>
@@ -369,5 +413,16 @@ const styles = StyleSheet.create({
   closeButton: {
     color: 'white',
     textAlign: 'center',
+  },
+
+  infoRow: {
+    borderBottomColor: 'silver',
+    borderBottomWidth: 1,
+    marginTop: 10,
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 10,
   },
 });
