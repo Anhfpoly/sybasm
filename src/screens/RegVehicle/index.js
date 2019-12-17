@@ -15,6 +15,7 @@ import Dialog, {
 import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {Fumi} from 'react-native-textinput-effects';
 
 export default class RegVehicle extends Component {
@@ -27,8 +28,8 @@ export default class RegVehicle extends Component {
     loaixe: '',
     mauxe: '',
     bienso: '',
-    sokhung: '',
-    somay: '',
+    sokhung: 'JF63E1145678',
+    somay: '630XFZ619789',
     ngaycap: '',
     noicap: '',
     loaiphuongtien: '',
@@ -48,10 +49,25 @@ export default class RegVehicle extends Component {
       () => {
         this.setState({visible: true});
         this._getSoGiayPhep();
+        this._getNgayGio();
         this._getMaCS();
       },
     );
   }
+  _getNgayGio = () => {
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 10) {
+      month = '0' + month;
+    }
+    this.setState({
+      ngaycap: date + '/' + month + '/' + year,
+    });
+  };
 
   componentWillUnmount() {
     this.unsubcribleFocus;
@@ -62,17 +78,9 @@ export default class RegVehicle extends Component {
     ref.on('value', snapshot => {
       let num = snapshot.val() + 1;
       if (num <= 9) {
-        num = '00000' + num;
+        num = 'AS90340' + num;
       } else if (num <= 99) {
-        num = '0000' + num;
-      } else if (num <= 999) {
-        num = '000' + num;
-      } else if (num <= 9999) {
-        num = '00' + num;
-      } else if (num <= 99999) {
-        num = '0' + num;
-      } else if (num <= 999999) {
-        num = num;
+        num = 'AS9034' + num;
       }
       this.setState({
         sogiay: num,
@@ -132,6 +140,7 @@ export default class RegVehicle extends Component {
         ngaycap: this.state.ngaycap,
         noicap: this.state.noicap,
         loaitk: 'cx',
+        vitien: '0',
       });
       this._setUsers(this.state.chuxe, this.state.dienthoai, 'cx');
       this.setState({
@@ -308,8 +317,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Chủ Xe'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -328,8 +337,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Điện Thoại'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -348,8 +357,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Địa Chỉ'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -367,9 +376,9 @@ export default class RegVehicle extends Component {
                   marginBottom: 3,
                 }}>
                 <Fumi
-                  label={'Loại Xe'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  label={'Hãng Xe'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -388,8 +397,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Loại Phương Tiện'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -408,8 +417,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Màu Xe'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -428,8 +437,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Biển Số'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -448,12 +457,13 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Số Khung'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
                   inputPadding={16}
+                  value={this.state.sokhung}
                   onChangeText={text => {
                     this.setState({sokhung: text});
                   }}
@@ -468,12 +478,13 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Số Máy'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
                   inputPadding={16}
+                  value={this.state.somay}
                   onChangeText={text => {
                     this.setState({somay: text});
                   }}
@@ -488,12 +499,13 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Ngày Cấp'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
                   inputPadding={16}
+                  value={this.state.ngaycap}
                   onChangeText={text => {
                     this.setState({ngaycap: text});
                   }}
@@ -508,8 +520,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Nơi Cấp'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -577,8 +589,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Họ và Tên'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -597,8 +609,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Ngày Sinh'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -617,8 +629,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Ngày Vào Ngành'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -637,8 +649,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Cấp Bậc'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -657,8 +669,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Đơn Vị'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}
@@ -677,8 +689,8 @@ export default class RegVehicle extends Component {
                 }}>
                 <Fumi
                   label={'Điện Thoại'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'university'}
+                  iconClass={SimpleLineIcons}
+                  iconName={'pencil'}
                   iconColor={'#4285f4'}
                   iconSize={20}
                   iconWidth={40}

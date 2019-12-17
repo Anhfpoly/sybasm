@@ -35,9 +35,14 @@ export default class Profile extends Component {
     loaiphuongtien: '',
     bienso: '',
     loaixe: '',
+    vitien: '',
   };
   componentDidMount() {
     this._getUserName();
+    console.log(this._currencyFormat(312000000));
+  }
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
   }
   _getUserName = async () => {
     try {
@@ -52,6 +57,9 @@ export default class Profile extends Component {
     await firebase.auth().signOut();
     this.props.navigation.navigate('Login');
   };
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
+  }
   _getDSChuXe = value => {
     const ref = database().ref('vehicles');
     ref.on('value', snapshot => {
@@ -74,8 +82,10 @@ export default class Profile extends Component {
         loaiphuongtien: filtered[0].loaiphuongtien,
         bienso: filtered[0].bienso,
         loaixe: filtered[0].loaixe,
+        vitien: filtered[0].vitien,
       });
     });
+    this._currencyFormat(this.state.vitien);
   };
   render() {
     return (
@@ -86,6 +96,13 @@ export default class Profile extends Component {
             source={require('../../assets/images/driver.png')}
           />
           <Text style={styles.name}>{this.state.chuxe}</Text>
+          <View style={{flexDirection: 'row', paddingLeft: 10}}>
+            <Entypo name={'wallet'} size={18} color="#4285f4" />
+            <Text style={styles.vitien}>
+              {' '}
+              {this._currencyFormat(Number(this.state.vitien))}
+            </Text>
+          </View>
         </View>
         <View style={styles.infoContainer}>
           <Text
@@ -239,6 +256,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#ff4800',
+  },
+  vitien: {
+    marginBottom: 15,
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#4285f4',
   },
   infoContainer: {
     borderRadius: 7,

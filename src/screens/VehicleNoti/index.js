@@ -26,6 +26,7 @@ export default class VehicleNoti extends Component {
   state = {
     danhsachvipham: [],
     visible: false,
+    isnopphat: false,
     mabienban: '',
     bienso: '',
     dienthoai: '',
@@ -53,6 +54,9 @@ export default class VehicleNoti extends Component {
       }
     } catch (error) {}
   };
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
+  }
   _updateData = async status => {
     const ref = database().ref('records/' + this.state.itemId);
     ref.set({
@@ -96,8 +100,15 @@ export default class VehicleNoti extends Component {
     this.setState({visible: false});
     this._updateData('Đúng lỗi');
   }
+  _huy() {
+    this.setState({isnopphat: false});
+  }
+  _thanhtoan() {
+    this.setState({isnopphat: false});
+    this._updateData('Đã nộp phạt');
+  }
   _nopphat() {
-    this.setState({visible: false});
+    this.setState({visible: false, isnopphat: true});
   }
   render() {
     return (
@@ -161,7 +172,7 @@ export default class VehicleNoti extends Component {
                   </Text>
                   <Text numberOfLines={1}>
                     {'Tiền phạt: '}
-                    {item.tienphat}
+                    {this._currencyFormat(Number(item.tienphat))}
                   </Text>
                   <Text numberOfLines={1}>
                     {'Thời gian: '}
@@ -186,6 +197,7 @@ export default class VehicleNoti extends Component {
                     this.setState({visible: false});
                   }}
                   footer={
+                    this.state.trangthai !== 'Đã nộp phạt' && (
                     <DialogFooter>
                       {this.state.trangthai === 'Đúng lỗi' ? (
                         <DialogButton
@@ -211,6 +223,7 @@ export default class VehicleNoti extends Component {
                         </>
                       )}
                     </DialogFooter>
+                    )
                   }
                   dialogAnimation={
                     new ScaleAnimation({
@@ -249,17 +262,17 @@ export default class VehicleNoti extends Component {
                         Tại: {this.state.vitri}
                       </Text>
                       <Text style={{fontSize: 12}}>
-                    {'Chúng tôi gồm: '}
-                    {this.state.nguoilap}
-                  </Text>
-                  <Text style={{fontSize: 12}}>
-                    {'Cấp bậc, chức vụ: '}
-                    {this.state.capbac}
-                  </Text>
-                  <Text style={{fontSize: 12}}>
-                    {'Đơn vị: '}
-                    {this.state.donvi}
-                  </Text>
+                        {'Chúng tôi gồm: '}
+                        {this.state.nguoilap}
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Cấp bậc, chức vụ: '}
+                        {this.state.capbac}
+                      </Text>
+                      <Text style={{fontSize: 12}}>
+                        {'Đơn vị: '}
+                        {this.state.donvi}
+                      </Text>
                       <Text style={{fontSize: 12}}>
                         Tiến hành lập biên bản vi phạm hành chính với:
                       </Text>
@@ -272,12 +285,55 @@ export default class VehicleNoti extends Component {
                         {this.state.dienthoai}
                       </Text>
                       <Text style={{fontSize: 12}}>
-                        {'Nội dung vi phạm: \n'}
+                        {'Nội dung vi phạm: '}
                         {this.state.loivipham}
                       </Text>
                       <Text style={{fontSize: 12}}>
-                        {'Số tiền nộp phạt: \n'}
-                        {this.state.tienphat}
+                        {'Số tiền nộp phạt: '}
+                        {this._currencyFormat(Number(this.state.tienphat))}
+                      </Text>
+                    </View>
+                  </DialogContent>
+                </Dialog>
+              </View>
+
+              <View>
+                <Dialog
+                  visible={this.state.isnopphat}
+                  onTouchOutside={() => {
+                    this.setState({isnopphat: false});
+                  }}
+                  footer={
+                    <DialogFooter>
+                      <>
+                        <DialogButton
+                          text="Huỷ"
+                          onPress={() => {
+                            this._huy();
+                          }}
+                        />
+                        <DialogButton
+                          text="Thanh Toán"
+                          onPress={() => {
+                            this._thanhtoan();
+                          }}
+                        />
+                      </>
+                    </DialogFooter>
+                  }
+                  dialogAnimation={
+                    new ScaleAnimation({
+                      slideFrom: 'bottom',
+                    })
+                  }>
+                  <DialogContent>
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Text style={{marginTop: 10, fontWeight: 'bold'}}>
+                        CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                      </Text>
+                      <Text style={{fontWeight: 'bold'}}>
+                        Độc lập - Tự Do - Hạnh Phúc
                       </Text>
                     </View>
                   </DialogContent>

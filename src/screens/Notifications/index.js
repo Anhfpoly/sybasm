@@ -38,7 +38,7 @@ export default class Notifications extends Component {
     vitri: '',
     itemId: '',
     capbac: '',
-    donvi: ''
+    donvi: '',
   };
   componentDidMount() {
     this._getUserName();
@@ -73,6 +73,9 @@ export default class Notifications extends Component {
       this.setState({danhsachvipham: filtered});
     });
   };
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
+  }
   render() {
     return (
       <SafeAreaView>
@@ -199,12 +202,12 @@ export default class Notifications extends Component {
                     {this.state.dienthoai}
                   </Text>
                   <Text style={{fontSize: 12}}>
-                    {'Nội dung vi phạm: \n'}
+                    {'Nội dung vi phạm: '}
                     {this.state.loivipham}
                   </Text>
                   <Text style={{fontSize: 12}}>
-                    {'Số tiền nộp phạt: \n'}
-                    {this.state.tienphat}
+                    {'Số tiền nộp phạt: '}
+                    {this._currencyFormat(Number(this.state.tienphat))}
                   </Text>
                 </View>
               </DialogContent>

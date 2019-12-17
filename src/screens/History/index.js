@@ -73,6 +73,9 @@ export default class History extends Component {
       this.setState({danhsachvipham: filtered});
     });
   };
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
+  }
   render() {
     return (
       <SafeAreaView>
@@ -115,7 +118,7 @@ export default class History extends Component {
                       vitri: item.vitri,
                       itemId: item.id,
                       capbac: item.capbac,
-                      donvi: item.donvi
+                      donvi: item.donvi,
                     });
                   }}>
                   <Text
@@ -134,7 +137,7 @@ export default class History extends Component {
                   </Text>
                   <Text numberOfLines={1}>
                     {'Tiền phạt: '}
-                    {item.tienphat}
+                    {this._currencyFormat(Number(item.tienphat))}
                   </Text>
                   <Text numberOfLines={1}>
                     {'Thời gian: '}
@@ -215,12 +218,12 @@ export default class History extends Component {
                     {this.state.dienthoai}
                   </Text>
                   <Text style={{fontSize: 12}}>
-                    {'Nội dung vi phạm: \n'}
+                    {'Nội dung vi phạm: '}
                     {this.state.loivipham}
                   </Text>
                   <Text style={{fontSize: 12}}>
-                    {'Số tiền nộp phạt: \n'}
-                    {this.state.tienphat}
+                    {'Số tiền nộp phạt: '}
+                    {this._currencyFormat(Number(this.state.tienphat))}
                   </Text>
                 </View>
               </DialogContent>
