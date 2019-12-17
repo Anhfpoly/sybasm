@@ -182,10 +182,6 @@ export default class VehicleNoti extends Component {
     let sodu =
       Number(this.state.vitien) -
       (Number(this.state.tienphat) + Number(this.state.phigiaodich));
-    console.log(sodu);
-    console.log(Number(this.state.vitien));
-    console.log(Number(this.state.tienphat));
-    console.log(Number(this.state.phigiaodich));
     this._updateWallet(sodu);
     alert('Nộp phạt thành công!');
   }

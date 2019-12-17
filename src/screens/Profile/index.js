@@ -9,8 +9,8 @@ import {
   Platform,
   ScrollView,
   AsyncStorage,
+  TextInput,
 } from 'react-native';
-import {TextInput, Header} from '../../components';
 import firebase from '@react-native-firebase/app';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -26,6 +26,7 @@ export default class Profile extends Component {
   static navigationOptions = {header: null};
   state = {
     visible: false,
+    isnap: false,
     danhsachchuxe: [],
     phonenum: '',
     chuxe: '',
@@ -36,11 +37,83 @@ export default class Profile extends Component {
     bienso: '',
     loaixe: '',
     vitien: '',
+    mathe: '514159607482905',
+    seri: '10004201316539',
+
+    idchuxe: '',
+    chuxe: '',
+    dienthoai: '',
+    diachi: '',
+    loaixe: '',
+    loaiphuongtien: '',
+    mauxe: '',
+    bienso: '',
+    sokhung: '',
+    somay: '',
+    ngaycap: '',
+    noicap: '',
+    loaitk: '',
+    ghichu: '',
+    idchuxe: '',
   };
   componentDidMount() {
     this._getUserName();
-    console.log(this._currencyFormat(312000000));
   }
+  _updateWallet = async value => {
+    const ref = database().ref('vehicles/' + this.state.idchuxe);
+    ref.set({
+      sogiay: this.state.sogiay,
+      chuxe: this.state.chuxe,
+      dienthoai: this.state.dienthoai,
+      diachi: this.state.diachi,
+      loaixe: this.state.loaixe,
+      loaiphuongtien: this.state.loaiphuongtien,
+      mauxe: this.state.mauxe,
+      bienso: this.state.bienso,
+      sokhung: this.state.sokhung,
+      somay: this.state.somay,
+      ngaycap: this.state.ngaycap,
+      noicap: this.state.noicap,
+      loaitk: 'cx',
+      vitien: value,
+    });
+  };
+
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
+  }
+  _getDSChuXe = value => {
+    const ref = database().ref('vehicles');
+    ref.on('value', snapshot => {
+      let danhsachchuxe = [];
+      snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
+        var childData = childSnapshot.val();
+        danhsachchuxe.push({id: key, ...childData});
+      });
+      let filtered = danhsachchuxe.filter(item =>
+        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
+      );
+      this.setState({
+        danhsachchuxe: filtered,
+        idchuxe: filtered[0].id,
+        sogiay: filtered[0].sogiay,
+        chuxe: filtered[0].chuxe,
+        dienthoai: filtered[0].dienthoai,
+        diachi: filtered[0].diachi,
+        loaixe: filtered[0].loaixe,
+        loaiphuongtien: filtered[0].loaiphuongtien,
+        mauxe: filtered[0].mauxe,
+        bienso: filtered[0].bienso,
+        sokhung: filtered[0].sokhung,
+        somay: filtered[0].somay,
+        ngaycap: filtered[0].ngaycap,
+        noicap: filtered[0].noicap,
+        loaitk: 'cx',
+        vitien: filtered[0].vitien,
+      });
+    });
+  };
   _currencyFormat(num) {
     return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
   }
@@ -57,36 +130,14 @@ export default class Profile extends Component {
     await firebase.auth().signOut();
     this.props.navigation.navigate('Login');
   };
+  _naptien() {
+    let sodu = Number(this.state.vitien) + 500000;
+    this._updateWallet(sodu);
+    alert('Bạn đã nạp thành công 500,000 đ vào tài khoản!');
+  }
   _currencyFormat(num) {
     return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
   }
-  _getDSChuXe = value => {
-    const ref = database().ref('vehicles');
-    ref.on('value', snapshot => {
-      let danhsachchuxe = [];
-      snapshot.forEach(function(childSnapshot) {
-        let key = childSnapshot.key;
-        var childData = childSnapshot.val();
-        danhsachchuxe.push({id: key, ...childData});
-      });
-      let filtered = danhsachchuxe.filter(item =>
-        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
-      );
-      console.log(filtered);
-      this.setState({
-        danhsachchuxe: filtered,
-        chuxe: filtered[0].chuxe,
-        diachi: filtered[0].diachi,
-        sogiay: filtered[0].sogiay,
-        dienthoai: filtered[0].dienthoai,
-        loaiphuongtien: filtered[0].loaiphuongtien,
-        bienso: filtered[0].bienso,
-        loaixe: filtered[0].loaixe,
-        vitien: filtered[0].vitien,
-      });
-    });
-    this._currencyFormat(this.state.vitien);
-  };
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -103,6 +154,11 @@ export default class Profile extends Component {
               {this._currencyFormat(Number(this.state.vitien))}
             </Text>
           </View>
+          <TouchableOpacity
+            style={styles.naptien}
+            onPress={() => this.setState({isnap: true})}>
+            <Text style={styles.textnaptien}>Nạp tiền</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.infoContainer}>
           <Text
@@ -224,6 +280,84 @@ export default class Profile extends Component {
             </DialogContent>
           </Dialog>
         </View>
+
+        <View>
+          <Dialog
+            visible={this.state.isnap}
+            onTouchOutside={() => {
+              this.setState({isnap: false});
+            }}
+            footer={
+              <DialogFooter>
+                <DialogButton
+                  text="Huỷ"
+                  onPress={() => {
+                    this.setState({isnap: false});
+                  }}
+                />
+                <DialogButton
+                  text="Xác nhận"
+                  onPress={() => {
+                    this.setState({isnap: false}, () => this._naptien());
+                  }}
+                />
+              </DialogFooter>
+            }
+            dialogAnimation={
+              new ScaleAnimation({
+                slideFrom: 'bottom',
+              })
+            }>
+            <DialogContent>
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    margin: 12,
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                    marginBottom: 20,
+                  }}>
+                  Nạp Tiền Vào Tài Khoản
+                </Text>
+                <Text style={{marginBottom: 20}}>
+                  Nạp tiền bằng thẻ: Viettel , Vinaphone, Mobiphone
+                </Text>
+                <View>
+                  <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                    Mã thẻ cào
+                  </Text>
+                  <TextInput
+                    style={{
+                      borderColor: '#4285f4',
+                      borderBottomColor: '#4285f4',
+                      borderWidth: 1,
+                      width: 300,
+                      borderRadius: 6,
+                      paddingLeft: 10,
+                    }}>
+                    514159607482905
+                  </TextInput>
+                </View>
+                <View>
+                  <Text style={{color: '#4285f4', fontWeight: 'bold'}}>
+                    Số seri
+                  </Text>
+                  <TextInput
+                    style={{
+                      borderColor: '#4285f4',
+                      borderBottomColor: '#4285f4',
+                      borderWidth: 1,
+                      width: 300,
+                      borderRadius: 6,
+                      paddingLeft: 10,
+                    }}>
+                    100042013165398
+                  </TextInput>
+                </View>
+              </View>
+            </DialogContent>
+          </Dialog>
+        </View>
       </ScrollView>
     );
   }
@@ -323,5 +457,19 @@ const styles = StyleSheet.create({
   textButton: {
     color: 'white',
     fontSize: 16,
+  },
+  naptien: {
+    width: 80,
+    height: 30,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#4285f4',
+    marginBottom: 30,
+    marginTop: 10,
+  },
+  textnaptien: {
+    color: 'white',
+    fontSize: 12,
   },
 });
