@@ -145,7 +145,7 @@ export default class VehicleNoti extends Component {
         ngaycap: filtered[0].ngaycap,
         noicap: filtered[0].noicap,
         loaitk: 'cx',
-        vitien: value,
+        vitien: filtered[0].vitien,
       });
     });
   };
@@ -179,8 +179,15 @@ export default class VehicleNoti extends Component {
   _thanhtoan() {
     this.setState({isnopphat: false});
     this._updateData('Đã nộp phạt');
-    this._updateWallet(987123);
-    alert("Nộp phạt thành công!")
+    let sodu =
+      Number(this.state.vitien) -
+      (Number(this.state.tienphat) + Number(this.state.phigiaodich));
+    console.log(sodu);
+    console.log(Number(this.state.vitien));
+    console.log(Number(this.state.tienphat));
+    console.log(Number(this.state.phigiaodich));
+    this._updateWallet(sodu);
+    alert('Nộp phạt thành công!');
   }
   _nopphat() {
     this.setState({visible: false, isnopphat: true});
@@ -449,7 +456,7 @@ export default class VehicleNoti extends Component {
                             Phí giao dịch
                           </Text>
                           <Text style={styles.infoDetail}>
-                            {this.state.phigiaodich}
+                          {this._currencyFormat(Number(this.state.phigiaodich))}
                           </Text>
                         </View>
                       </View>
