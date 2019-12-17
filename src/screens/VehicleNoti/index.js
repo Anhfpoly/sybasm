@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import {TextInput, Header} from '../../components';
 import database from '@react-native-firebase/database';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Fumi} from 'react-native-textinput-effects';
 import Dialog, {
   DialogFooter,
   DialogButton,
@@ -44,6 +42,22 @@ export default class VehicleNoti extends Component {
     phonecs: '',
     phigiaodich: '0',
     loaiphuongtien: '',
+    danhsachchuxe: [],
+
+    chuxe: '',
+    dienthoai: '',
+    diachi: '',
+    loaixe: '',
+    loaiphuongtien: '',
+    mauxe: '',
+    bienso: '',
+    sokhung: '',
+    somay: '',
+    ngaycap: '',
+    noicap: '',
+    loaitk: '',
+    ghichu: '',
+    idchuxe: '',
   };
   componentDidMount() {
     this._getUserName();
@@ -80,6 +94,61 @@ export default class VehicleNoti extends Component {
       phigiaodich: this.state.phigiaodich,
     });
   };
+  _updateWallet = async value => {
+    const ref = database().ref('vehicles/' + this.state.idchuxe);
+    ref.set({
+      sogiay: this.state.sogiay,
+      chuxe: this.state.chuxe,
+      dienthoai: this.state.dienthoai,
+      diachi: this.state.diachi,
+      loaixe: this.state.loaixe,
+      loaiphuongtien: this.state.loaiphuongtien,
+      mauxe: this.state.mauxe,
+      bienso: this.state.bienso,
+      sokhung: this.state.sokhung,
+      somay: this.state.somay,
+      ngaycap: this.state.ngaycap,
+      noicap: this.state.noicap,
+      loaitk: 'cx',
+      vitien: value,
+    });
+  };
+
+  _currencyFormat(num) {
+    return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' đ';
+  }
+  _getDSChuXe = value => {
+    const ref = database().ref('vehicles');
+    ref.on('value', snapshot => {
+      let danhsachchuxe = [];
+      snapshot.forEach(function(childSnapshot) {
+        let key = childSnapshot.key;
+        var childData = childSnapshot.val();
+        danhsachchuxe.push({id: key, ...childData});
+      });
+      let filtered = danhsachchuxe.filter(item =>
+        item.dienthoai.toLowerCase().includes(value.toLowerCase()),
+      );
+      this.setState({
+        danhsachchuxe: filtered,
+        idchuxe: filtered[0].id,
+        sogiay: filtered[0].sogiay,
+        chuxe: filtered[0].chuxe,
+        dienthoai: filtered[0].dienthoai,
+        diachi: filtered[0].diachi,
+        loaixe: filtered[0].loaixe,
+        loaiphuongtien: filtered[0].loaiphuongtien,
+        mauxe: filtered[0].mauxe,
+        bienso: filtered[0].bienso,
+        sokhung: filtered[0].sokhung,
+        somay: filtered[0].somay,
+        ngaycap: filtered[0].ngaycap,
+        noicap: filtered[0].noicap,
+        loaitk: 'cx',
+        vitien: value,
+      });
+    });
+  };
   _getDSViPham = value => {
     const ref = database().ref('records');
     ref.on('value', snapshot => {
@@ -110,6 +179,8 @@ export default class VehicleNoti extends Component {
   _thanhtoan() {
     this.setState({isnopphat: false});
     this._updateData('Đã nộp phạt');
+    this._updateWallet(987123);
+    alert("Nộp phạt thành công!")
   }
   _nopphat() {
     this.setState({visible: false, isnopphat: true});
@@ -141,27 +212,30 @@ export default class VehicleNoti extends Component {
                   }}
                   key={index}
                   onPress={() => {
-                    this.setState({
-                      visible: true,
-                      mabienban: item.mabienban,
-                      bienso: item.bienso,
-                      dienthoai: item.dienthoai,
-                      ghichu: item.ghichu,
-                      loivipham: item.loivipham,
-                      ngaygio: item.ngaygio,
-                      nguoilap: item.nguoilap,
-                      nguoivipham: item.nguoivipham,
-                      tienphat: item.tienphat,
-                      trangthai: item.trangthai,
-                      vitri: item.vitri,
-                      itemId: item.id,
-                      capbac: item.capbac,
-                      donvi: item.donvi,
-                      phonecs: item.phonecs,
-                      loaiphuongtien: item.loaiphuongtien,
-                      phigiaodich:
-                        item.loaiphuongtien === 'Xe máy' ? 3000 : 6000,
-                    });
+                    this.setState(
+                      {
+                        visible: true,
+                        mabienban: item.mabienban,
+                        bienso: item.bienso,
+                        dienthoai: item.dienthoai,
+                        ghichu: item.ghichu,
+                        loivipham: item.loivipham,
+                        ngaygio: item.ngaygio,
+                        nguoilap: item.nguoilap,
+                        nguoivipham: item.nguoivipham,
+                        tienphat: item.tienphat,
+                        trangthai: item.trangthai,
+                        vitri: item.vitri,
+                        itemId: item.id,
+                        capbac: item.capbac,
+                        donvi: item.donvi,
+                        phonecs: item.phonecs,
+                        loaiphuongtien: item.loaiphuongtien,
+                        phigiaodich:
+                          item.loaiphuongtien === 'Xe máy' ? 3000 : 6000,
+                      },
+                      () => this._getDSChuXe(this.state.dienthoai),
+                    );
                   }}>
                   <Text
                     numberOfLines={1}

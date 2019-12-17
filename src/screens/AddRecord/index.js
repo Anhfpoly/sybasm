@@ -39,7 +39,7 @@ export default class AddRecord extends Component {
     capbac: '',
     donvi: '',
     phonecs: '',
-    loaiphuongtien: ''
+    loaiphuongtien: '',
   };
   componentDidMount() {
     this.unsubcribleFocus = this.props.navigation.addListener(

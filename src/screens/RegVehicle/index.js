@@ -119,9 +119,6 @@ export default class RegVehicle extends Component {
       this.state.loaiphuongtien === '' ||
       this.state.mauxe === '' ||
       this.state.bienso === '' ||
-      this.state.sokhung === '' ||
-      this.state.somay === '' ||
-      this.state.ngaycap === '' ||
       this.state.noicap === ''
     ) {
       alert('Vui lòng nhập đủ thông tin!');
